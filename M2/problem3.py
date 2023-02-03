@@ -9,7 +9,11 @@ def process_array(num, arr):
     print(arr)
     print("\nPositive Output:\n")
     # TODO add new code here to print the desired result
-
+    positive_values = []
+    for i in arr:
+        if float(i) > 0:
+            positive_values.append(i)
+    print(positive_values)
 
 print("Problem 3")
 process_array(1, a1)
