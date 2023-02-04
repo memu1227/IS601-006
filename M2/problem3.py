@@ -11,9 +11,15 @@ def process_array(num, arr):
     # TODO add new code here to print the desired result
     positive_values = []
     for i in arr:
-        if float(i) > 0:
-            positive_values.append(i)
+        if num == 4:
+            i = int(i)
+            i = abs(i)
+            positive_values.append(str(i))
+        else:
+            positive_values.append(abs(i))
     print(positive_values)
+    
+
 
 print("Problem 3")
 process_array(1, a1)
