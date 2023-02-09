@@ -25,3 +25,5 @@ add(5,2)
 
 #decorators can apply to any function which is why decorator 
 #should be able to work with any arguments
+
+#assert checks to see if its true or false
