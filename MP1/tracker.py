@@ -58,16 +58,16 @@ def add_task(name: str, description: str, due: str):
     task["lastActivity"] = datetime.now()
     # set the name, description, and due date (all must be provided)
     if name and description and due:
-        task["name"] = name
-        task["description"] = description
+        task['name'] = name
+        task['description'] = description
         # due date must match one of the formats mentioned in str_to_datetime()
-        task["due"] = str_to_datetime(due)
+        task['due'] = str_to_datetime(due)
         # add the new task to the tasks list
         tasks.append(task)
     # output a message confirming the new task was added or if the addition was rejected due to missing data
-        print("New task was added.")
+        print('New task was added.')
     else:
-        print("New task rejected due to missing data")
+        print('New task rejected due to missing data.')
     # make sure save() is still called last in this function
     save()
     # include your ucid and date as a comment of when you implemented this, briefly summarize the solution
@@ -86,11 +86,16 @@ def process_update(index):
     #subtract index by 1 bc of python indexing
     task = tasks[index-1]
     # show the existing value of each property where the TODOs are marked in the text of the inputs (replace the TODO related text)
-    name = input(f"What's the name of this task? ({task["name"]}) \n").strip()
-    desc = input(f"What's a brief descriptions of this task? ({task["description"]}) \n").strip()
-    due = input(f"When is this task due (format: m/d/y H:M:S) ({task["due"]}) \n").strip()
+    name = input(f"What's the name of this task? ({task['name']}) \n").strip()
+    desc = input(f"What's a brief descriptions of this task? ({task['description']}) \n").strip()
+    due = input(f"When is this task due (format: m/d/y H:M:S) ({task['due']}) \n").strip()
     update_task(index, name=name, description=desc, due=due)
     # include your ucid and date as a comment of when you implemented this, briefly summarize the solution
+    '''
+    UCID: mm2836
+    Date: 2/15/23
+    Summary: Used if loop to check for index bounds and replaced the todos with existing value of each property 
+    '''
     
     
 
@@ -98,13 +103,24 @@ def update_task(index: int, name: str, description:str, due: str):
     """ Updates the name, description , due date of a task found by index if an update to the property was provided """
     # find the task by index
     # consider index out of bounds scenarios and include appropriate message(s) for invalid index
+    if index < 1 or index > len(tasks):
+        print("Invalid Index entered.")
+    #subtract index by 1 bc of python indexing
+    task = tasks[index-1]
     # update incoming task data if it's provided (if it's not provided use the original task property value)
+    if name or description or due:
+        task['name'] = name
+        task['description'] = description
+        # due date must match one of the formats mentioned in str_to_datetime()
+        task['due'] = str_to_datetime(due)
+        # add the new task to the tasks list
+        tasks.append(task)
     # update lastActivity with the current datetime value
+    task["lastActivity"] = datetime.now()
     # output that the task was updated if any items were changed, otherwise mention task was not updated
     # make sure save() is still called last in this function
-    # include your ucid and date as a comment of when you implemented this, briefly summarize the solution
-    
     save()
+    # include your ucid and date as a comment of when you implemented this, briefly summarize the solution
 
 def mark_done(index):
     """ Updates a single task, via index, to a done datetime"""
