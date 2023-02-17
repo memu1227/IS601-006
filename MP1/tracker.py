@@ -83,7 +83,9 @@ def process_update(index):
     # consider index out of bounds scenarios and include appropriate message(s) for invalid index
     if index < 1 or index > len(tasks):
         print("Invalid Index entered.")
-    #subtract index by 1 bc of python indexing
+        #exit the function in way bc if the index is wrong, it's pointless to continue with the function
+        return
+
     task = tasks[index-1]
     # show the existing value of each property where the TODOs are marked in the text of the inputs (replace the TODO related text)
     name = input(f"What's the name of this task? ({task['name']}) \n").strip()
@@ -105,49 +107,89 @@ def update_task(index: int, name: str, description:str, due: str):
     # consider index out of bounds scenarios and include appropriate message(s) for invalid index
     if index < 1 or index > len(tasks):
         print("Invalid Index entered.")
+        #exit the function in way bc if the index is wrong, it's pointless to continue with the function
+        return
     #subtract index by 1 bc of python indexing
     task = tasks[index-1]
     # update incoming task data if it's provided (if it's not provided use the original task property value)
-    if name or description or due:
+    if name:
         task['name'] = name
+    if description: 
         task['description'] = description
-        # due date must match one of the formats mentioned in str_to_datetime()
+    # due date must match one of the formats mentioned in str_to_datetime()
+    if due:
         task['due'] = str_to_datetime(due)
-        # add the new task to the tasks list
-        tasks.append(task)
     # update lastActivity with the current datetime value
     task["lastActivity"] = datetime.now()
     # output that the task was updated if any items were changed, otherwise mention task was not updated
+    if name or description or due:
+        print("Task was updated")
+    else:
+        print("Task was not updated")
     # make sure save() is still called last in this function
     save()
     # include your ucid and date as a comment of when you implemented this, briefly summarize the solution
+    '''
+    UCID: mm2836
+    Date: 2/17/23
+    Summary: Used if loop to check for index bounds and used if statements to check if info was provided and if it was, updated it and if not, left it alone
+    '''
 
 def mark_done(index):
     """ Updates a single task, via index, to a done datetime"""
     # find task from list by index
     # consider index out of bounds scenarios and include appropriate message(s) for invalid index
+    if index < 1 or index > len(tasks):
+        print("Invalid Index entered.")
+        #exit the function in way bc if the index is wrong, it's pointless to continue with the function
+        return
+    #subtract index by 1 bc of python indexing
+    task = tasks[index-1]
     # if it's not done, record the current datetime as the value
     # if it is done, print a message saying it's already completed
+    if not task['done']:
+        task['done'] = datetime.now()
+    else:
+        print(f"Task {task['name']} is already completed.")
     # make sure save() is still called last in this function
-    # include your ucid and date as a comment of when you implemented this, briefly summarize the solution
-
     save()
+    # include your ucid and date as a comment of when you implemented this, briefly summarize the solution
+    '''
+    UCID: mm2836
+    Date: 2/17/23
+    Summary: Used if loop to check for index bounds and used if statements to check if task wasnt done and if it wasnt, set it to current time else, print its done
+    '''
+
+    
 
 def view_task(index):
     """ View more info about a specific task fetch by index """
     # find task from list by index
     # consider index out of bounds scenarios and include appropriate message(s) for invalid index
+    if index < 1 or index > len(tasks):
+        print("Invalid Index entered.")
+        #exit the function in way bc if the index is wrong, it's pointless to continue with the function
+        return
+    #subtract index by 1 bc of python indexing
+    task = tasks[index-1]
     # utilize the given print statement when a task is found
+    #task = {}
+    if task:
+        print(f"""
+            [{'x' if task['done'] else ' '}] Task: {task['name']}\n 
+            Description: {task['description']} \n 
+            Last Activity: {task['lastActivity']} \n
+            Due: {task['due']}\n
+            Completed: {task['done'] if task['done'] else '-'} \n
+            """.replace('  ', ' '))
+    else:
+        print("Task not found.")
     # include your ucid and date as a comment of when you implemented this, briefly summarize the solution
-    task = {}
-    print(f"""
-        [{'x' if task['done'] else ' '}] Task: {task['name']}\n 
-        Description: {task['description']} \n 
-        Last Activity: {task['lastActivity']} \n
-        Due: {task['due']}\n
-        Completed: {task['done'] if task['done'] else '-'} \n
-        """.replace('  ', ' '))
-
+    '''
+    UCID: mm2836
+    Date: 2/17/23
+    Summary: Used if loop to check for index bounds and used if statements to check if task exists and if so print given statement and if not print it nonexistent
+    '''
 
 def delete_task(index):
     """ deletes a task from the tasks list by index """
