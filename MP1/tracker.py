@@ -81,12 +81,12 @@ def process_update(index):
     """ extracted the user input prompts to get task data then passes it to update_task() """
     # get the task by index
     # consider index out of bounds scenarios and include appropriate message(s) for invalid index
-    if index < 1 or index > len(tasks):
+    if index < 0 or index >= len(tasks):
         print("Invalid Index entered.")
         #exit the function in way bc if the index is wrong, it's pointless to continue with the function
         return
 
-    task = tasks[index-1]
+    task = tasks[index]
     # show the existing value of each property where the TODOs are marked in the text of the inputs (replace the TODO related text)
     name = input(f"What's the name of this task? ({task['name']}) \n").strip()
     desc = input(f"What's a brief descriptions of this task? ({task['description']}) \n").strip()
@@ -105,12 +105,11 @@ def update_task(index: int, name: str, description:str, due: str):
     """ Updates the name, description , due date of a task found by index if an update to the property was provided """
     # find the task by index
     # consider index out of bounds scenarios and include appropriate message(s) for invalid index
-    if index < 1 or index > len(tasks):
+    if index < 0 or index >= len(tasks):
         print("Invalid Index entered.")
         #exit the function in way bc if the index is wrong, it's pointless to continue with the function
         return
-    #subtract index by 1 bc of python indexing
-    task = tasks[index-1]
+    task = tasks[index]
     # update incoming task data if it's provided (if it's not provided use the original task property value)
     if name:
         task['name'] = name
@@ -139,12 +138,12 @@ def mark_done(index):
     """ Updates a single task, via index, to a done datetime"""
     # find task from list by index
     # consider index out of bounds scenarios and include appropriate message(s) for invalid index
-    if index < 1 or index > len(tasks):
+    if index < 0 or index >= len(tasks):
         print("Invalid Index entered.")
         #exit the function in way bc if the index is wrong, it's pointless to continue with the function
         return
-    #subtract index by 1 bc of python indexing
-    task = tasks[index-1]
+ 
+    task = tasks[index]
     # if it's not done, record the current datetime as the value
     # if it is done, print a message saying it's already completed
     if not task['done']:
@@ -166,12 +165,12 @@ def view_task(index):
     """ View more info about a specific task fetch by index """
     # find task from list by index
     # consider index out of bounds scenarios and include appropriate message(s) for invalid index
-    if index < 1 or index > len(tasks):
+    if index < 0 or index >= len(tasks):
         print("Invalid Index entered.")
         #exit the function in way bc if the index is wrong, it's pointless to continue with the function
         return
-    #subtract index by 1 bc of python indexing
-    task = tasks[index-1]
+
+    task = tasks[index]
     # utilize the given print statement when a task is found
     #task = {}
     if task:
@@ -193,39 +192,94 @@ def view_task(index):
 
 def delete_task(index):
     """ deletes a task from the tasks list by index """
-    # delete/remove task from list by index
-    # message should show if it was successful or not
     # consider index out of bounds scenarios and include appropriate message(s) for invalid index
+    if index < 0 or index >= len(tasks):
+        print("Invalid Index entered.")
+        #exit the function in way bc if the index is wrong, it's pointless to continue with the function
+        return
+    task = tasks[index]
+    # delete/remove task from list by index
+    tasks.pop(index)
+    # message should show if it was successful or not
+    if task not in tasks:
+        print("Task successfully removed")
+    else:
+        print("Task not successfully deleted")
     # make sure save() is still called last in this function
-    # include your ucid and date as a comment of when you implemented this, briefly summarize the solution
-    
     save()
+    # include your ucid and date as a comment of when you implemented this, briefly summarize the solution
+    '''
+    UCID: mm2836
+    Date: 2/17/23
+    Summary: Used if loop to check for index bounds and used pop function to delete remove task at specified index and used if statement to check if it was deleted
+    '''
+    
 
 def get_incomplete_tasks():
     """ prints a list of tasks that are not done """
     # generate a list of tasks where the task is not done
-    # pass that list into list_tasks()
-    # include your ucid and date as a comment of when you implemented this, briefly summarize the solution
     _tasks = []
+    for task in tasks:
+        if not task['done']:
+            _tasks.append(task)
+    # pass that list into list_tasks()
     list_tasks(_tasks)
+    # include your ucid and date as a comment of when you implemented this, briefly summarize the solution
+    '''
+    UCID: mm2836
+    Date: 2/17/23
+    Summary: Used for loop to loop thru each task and if task isn't marked done, then itll be added to a list which will be passed thru a function that will
+    display the tasks that are incomplete. 
+    '''
 
 def get_overdue_tasks():
     """ prints a list of tasks that are over due completion (not done and expired) """
     # generate a list of tasks where the due date is older than now and that are not complete
-    # pass that list into list_tasks()
-    # include your ucid and date as a comment of when you implemented this, briefly summarize the solution
     _tasks = []
+    for task in tasks:
+        if not task['done'] and (datetime.now() > task["due"]):
+            _tasks.append(task) 
+    # pass that list into list_tasks()
     list_tasks(_tasks)
+    # include your ucid and date as a comment of when you implemented this, briefly summarize the solution
+    '''
+    UCID: mm2836
+    Date: 2/17/23
+    Summary: Used for loop to loop thru each task and if task isn't marked done and the current date is after the due date, then itll be added to a list 
+    which will be passed thru a function that will display the tasks that are incomplete. 
+    '''
+    
 
 def get_time_remaining(index):
     """ outputs the number of days, hours, minutes, seconds a task has before it's overdue otherwise shows similar info for how far past due it is """
     # get the task by index
     # consider index out of bounds scenarios and include appropriate message(s) for invalid index
+    if index < 0 or index >= len(tasks):
+        print("Invalid Index entered.")
+        #exit the function in way bc if the index is wrong, it's pointless to continue with the function
+        return
+
+    task = tasks[index]
     # get the days, hours, minutes, seconds between the due date and now
-    # display the remaining time via print in a clear format showing days, hours, minutes, seconds
-    # if the due date is in the past print out how many days, hours, minutes, seconds the task is over due (clearly note that it's over due, values should be positive)
+    diff = str_to_datetime(task['due']) - datetime.now()
+    #check for task overdue
+    #if the due date is in the past print out how many days, hours, minutes, seconds the task is over due (clearly note that it's over due, values should be positive)
+    if diff.total_seconds() < 0:
+        overdue = True
+        diff = abs(diff)
+        # display the remaining time via print in a clear format showing days, hours, minutes, seconds
+        print(f"Your task is overdue by {diff.days} days, {diff.seconds // 3600} hours, {(diff.seconds//60) % 60} minutes, and {diff.seconds % 60} seconds overdue.")
+    else:
+        overdue = False
+        print(f"Your task is due in {diff.days} days, {diff.seconds // 3600} hours, {(diff.seconds//60) % 60} minutes, and {diff.seconds % 60} seconds overdue.")
     # include your ucid and date as a comment of when you implemented this, briefly summarize the solution
-    task = {}
+    '''
+    UCID: mm2836
+    Date: 2/17/23
+    Summary: Found the difference between the due date and the current date. If the time in seconds (after difference is converted to seconds) is
+    less than the zero, the amt of time passed after the due date in days, hours, minutes, seconds will be displayed (after taking absolute value so results 
+    will be positive). If it's not overdue, the time remaining will be displayed. 
+    '''
 
 # no changes needed below this line
 
