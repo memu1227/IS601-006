@@ -91,6 +91,7 @@ def process_update(index):
     name = input(f"What's the name of this task? ({task['name']}) \n").strip()
     desc = input(f"What's a brief descriptions of this task? ({task['description']}) \n").strip()
     due = input(f"When is this task due (format: m/d/y H:M:S) ({task['due']}) \n").strip()
+    
     update_task(index, name=name, description=desc, due=due)
     # include your ucid and date as a comment of when you implemented this, briefly summarize the solution
     '''
@@ -117,7 +118,7 @@ def update_task(index: int, name: str, description:str, due: str):
         task['description'] = description
     # due date must match one of the formats mentioned in str_to_datetime()
     if due:
-        task['due'] = str_to_datetime(due)
+        task['due'] = str_to_datetime(str(due))
     # update lastActivity with the current datetime value
     task["lastActivity"] = datetime.now()
     # output that the task was updated if any items were changed, otherwise mention task was not updated
@@ -142,7 +143,7 @@ def mark_done(index):
         print("Invalid Index entered.")
         #exit the function in way bc if the index is wrong, it's pointless to continue with the function
         return
- 
+
     task = tasks[index]
     # if it's not done, record the current datetime as the value
     # if it is done, print a message saying it's already completed
@@ -228,7 +229,7 @@ def get_incomplete_tasks():
     '''
     UCID: mm2836
     Date: 2/17/23
-    Summary: Used for loop to loop thru each task and if task isn't marked done, then itll be added to a list which will be passed thru a function that will
+    Summary: Used for loop to loop thru each task and if task isn't marked done, then itll be added to a list which will be passed thru a funcovertion that will
     display the tasks that are incomplete. 
     '''
 
@@ -236,8 +237,10 @@ def get_overdue_tasks():
     """ prints a list of tasks that are over due completion (not done and expired) """
     # generate a list of tasks where the due date is older than now and that are not complete
     _tasks = []
+
     for task in tasks:
-        if not task['done'] and (datetime.now() > task["due"]):
+        #print(type(task['due']))
+        if (str_to_datetime(str(task['due'])) < datetime.now()) and not task['done']:
             _tasks.append(task) 
     # pass that list into list_tasks()
     list_tasks(_tasks)
@@ -246,7 +249,7 @@ def get_overdue_tasks():
     UCID: mm2836
     Date: 2/17/23
     Summary: Used for loop to loop thru each task and if task isn't marked done and the current date is after the due date, then itll be added to a list 
-    which will be passed thru a function that will display the tasks that are incomplete. 
+    which will be passed thru a function that will display the tasks that are overdue. 
     '''
     
 
