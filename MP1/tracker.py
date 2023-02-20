@@ -264,7 +264,7 @@ def get_time_remaining(index):
 
     task = tasks[index]
     # get the days, hours, minutes, seconds between the due date and now
-    diff = str_to_datetime(task['due']) - datetime.now()
+    diff = str_to_datetime(str(task['due'])) - datetime.now()
     #check for task overdue
     #if the due date is in the past print out how many days, hours, minutes, seconds the task is over due (clearly note that it's over due, values should be positive)
     if diff.total_seconds() < 0:
