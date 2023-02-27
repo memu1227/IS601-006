@@ -27,7 +27,7 @@ def test_add_ans():
     '''
     UCID: mm2836
     Date Implemented: 02/26/23
-    Summary: Trying diff number sign combos for test cases ans for addition
+    Summary: Trying answer as value for test cases ans for addition
     '''
 
 #test subtraction
@@ -54,7 +54,7 @@ def test_sub_ans():
     '''
     UCID: mm2836
     Date Implemented: 02/26/23
-    Summary: Trying diff number sign combos for test cases ans for subtraction
+    Summary: Trying answer as value for test cases ans for subtraction
     '''
 
 #test multiplication
@@ -81,7 +81,7 @@ def test_mult_ans():
     '''
     UCID: mm2836
     Date Implemented: 02/26/23
-    Summary: Trying diff number sign combos for test cases ans for multiplication
+    Summary: Trying answer as value for test cases ans for multiplication
     '''
 
 #test division
@@ -115,7 +115,7 @@ def test_div_ans():
     '''
     UCID: mm2836
     Date Implemented: 02/26/23
-    Summary: Trying diff number sign combos for test cases ans for division
+    Summary: Trying answer as value for test cases ans for division
     '''
 
 
