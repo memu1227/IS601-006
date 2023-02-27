@@ -74,7 +74,7 @@ class MyCalc:
     Summary: Checks if either value is equal to answer and then subtracts the numbers 
     '''
 
-    #multipllication
+    #multiplication
     def multiplication(self,x,y):
         #check to see if one of the values is the previous answer
         if x == "ans":

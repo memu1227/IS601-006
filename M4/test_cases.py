@@ -11,6 +11,11 @@ def test_add():
     assert calc.addition(-4, 3) == -1
     assert calc.addition(4, -3) == 1
     assert calc.addition(-4, -3) == -7
+    '''
+    UCID: mm2836
+    Date Implemented: 02/26/23
+    Summary: Trying diff number sign combos for test cases for addition
+    '''
 
 #test the add ans
 def test_add_ans():
@@ -19,6 +24,11 @@ def test_add_ans():
     assert calc.addition('ans',7) == 0
     calc.addition(-7,7)
     assert calc.addition(7,'ans') == 7
+    '''
+    UCID: mm2836
+    Date Implemented: 02/26/23
+    Summary: Trying diff number sign combos for test cases ans for addition
+    '''
 
 #test subtraction
 def test_sub():
@@ -28,6 +38,11 @@ def test_sub():
     assert calc.subtraction(-4, 3) == -7
     assert calc.subtraction(4, -3) == 7
     assert calc.subtraction(-4, -3) == -1
+    '''
+    UCID: mm2836
+    Date Implemented: 02/26/23
+    Summary: Trying diff number sign combos for test cases for subtraction
+    '''
 
 #test the ans
 def test_sub_ans():
@@ -36,6 +51,11 @@ def test_sub_ans():
     assert calc.subtraction('ans',7) == -8 
     calc.subtraction(-4,4)
     assert calc.subtraction(7,'ans') == 15
+    '''
+    UCID: mm2836
+    Date Implemented: 02/26/23
+    Summary: Trying diff number sign combos for test cases ans for subtraction
+    '''
 
 #test multiplication
 def test_mult():
@@ -45,6 +65,11 @@ def test_mult():
     assert calc.multiplication(-4, 3) == -12
     assert calc.multiplication(4, -3) == -12
     assert calc.multiplication(-4, -3) == 12
+    '''
+    UCID: mm2836
+    Date Implemented: 02/26/23
+    Summary: Trying diff number sign combos for test cases for multiplication
+    '''
 
 #test the ans
 def test_mult_ans():
@@ -53,6 +78,11 @@ def test_mult_ans():
     assert calc.multiplication('ans',7) == 84 
     calc.multiplication(12,7)
     assert calc.multiplication(7,'ans') == 588
+    '''
+    UCID: mm2836
+    Date Implemented: 02/26/23
+    Summary: Trying diff number sign combos for test cases ans for multiplication
+    '''
 
 #test division
 def test_div():
@@ -65,6 +95,11 @@ def test_div():
     #test zero values
     with pytest.raises(ZeroDivisionError):
         calc.division(8, 0)
+    '''
+    UCID: mm2836
+    Date Implemented: 02/26/23
+    Summary: Trying diff number sign combos for test cases for division
+    '''
 
 #test the ans
 def test_div_ans():
@@ -77,5 +112,10 @@ def test_div_ans():
     calc.addition(4,-4)
     with pytest.raises(ZeroDivisionError):
         calc.division(4,'ans')
+    '''
+    UCID: mm2836
+    Date Implemented: 02/26/23
+    Summary: Trying diff number sign combos for test cases ans for division
+    '''
 
 
