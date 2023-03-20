@@ -154,13 +154,13 @@ class BurgerMachine:
         print(f"Current Burger: {','.join([x.name for x in self.inprogress_burger])}")
 
     def calculate_cost(self):
-        #initialize cost
-        cost_of_burger = 0
-        # TODO add the calculation expression/logic for the inprogress_burger
+        #reset the values
+        #self.reset()
+        # initialize and reset the total cost to 0
+        self.total_cost = 0 
         for i in self.inprogress_burger:
-            cost_of_burger += i.cost
-            #print(type(cost_of_burger))
-        return cost_of_burger
+            self.total_cost += i.cost
+        return self.total_cost
     '''
     UCID: mm2836
     Date: 03/13/23
@@ -184,10 +184,15 @@ class BurgerMachine:
                 self.handle_toppings(toppings)
                 self.print_current_burger()
             elif self.currently_selecting == STAGE.Pay:
+                #show expected value as a currency format
                 expected = self.calculate_cost()
-                # show expected value as currency format
                 # require total to be entered as currency format
                 total = input(f"Your total is ${expected:.2f}, please enter the exact value.\n")
+                '''
+                UCID:mm2836
+                Date Implemented: 03/14/23
+                Summary: Shows the expected value as a float and requires the total to be entered as a currency format
+                '''
                 self.handle_pay(expected, total)
                 
                 choice = input("What would you like to do? (order or quit)\n")
@@ -200,10 +205,17 @@ class BurgerMachine:
             # quit
             print("Quitting the burger machine")
             sys.exit()
-        # handle OutOfStockException
+        # handle OutOfStockExceptions
         except OutOfStockException:
             # show an appropriate message of what stage/category was out of stock
-            print(f'{self.currently_selecting} is out of stock.')
+            if self.quantity <= 0:
+                print(f'{self.currently_selecting} is out of stock.')
+            raise
+            '''
+            UCID:mm2836
+            Date Implemented: 03/15/23
+            Summary: Prints a message saying that the current stage is out of stock
+            '''
         # handle NeedsCleaningException
         except NeedsCleaningException:
             # prompt user to type "clean" to trigger clean_machine()
@@ -215,10 +227,20 @@ class BurgerMachine:
                 print("Machine was cleaned!")
             else:
                 print("Machine was not cleaned.")
+            '''
+            UCID:mm2836
+            Date Implemented: 03/15/23
+            Summary: Prompts user to clean machine by typing clean and will trigger clean machine if user types clean
+            '''
         # handle InvalidChoiceException
         except InvalidChoiceException:
             # show an appropriate message of what stage/category was the invalid choice was in
             print(f'{self.currently_selecting} has an invalid choice')
+            '''
+            UCID:mm2836
+            Date Implemented: 03/15/23
+            Summary: Prints a message saying that the current choice is invalid
+            '''
         # handle ExceededRemainingChoicesException
         except ExceededRemainingChoicesException:
             # show an appropriate message of which stage/category was exceeded
@@ -228,10 +250,21 @@ class BurgerMachine:
                 self.currently_selecting = STAGE.Toppings
             elif self.currently_selecting == STAGE.Toppings:
                 self.currently_selecting = STAGE.Pay
+            '''
+            UCID:mm2836
+            Date Implemented: 03/15/23
+            Summary: Prints a message saying that the user has exceeded the maximum number of choices and will move onto the next stage
+            '''
         # handle InvalidPaymentException
         except InvalidPaymentException:
-            print("Your payment is invalid. Try again.")
             # show an appropriate message
+            print("Your payment is invalid. Try again.")
+            '''
+            UCID:mm2836
+            Date Implemented: 03/15/23
+            Summary: Prints a message saying that the payment is invalid
+            '''
+            
         except:
             # this is a default catch all, follow the steps above
             print("Something went wrong")
