@@ -61,7 +61,7 @@ def importCSV():
             Date Implemented: 04/06/23
             '''
             for row in ...:
-                pass # todo remove
+                #pass # todo remove
                 # print(row) #example
                 # TODO importcsv-3 extract company data and append to company list 
                 # as a dict only with company data if all is present
