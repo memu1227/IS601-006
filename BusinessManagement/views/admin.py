@@ -23,8 +23,6 @@ def importCSV():
             if filename.split(".")[-1] != "csv":
                 flash("Incorrect file type. Please import a .csv file", "error")
                 return redirect(request.url)
-            else:
-                return redirect('/admin')
             '''
             UCID: mm2836
             Date Implemented: 04/06/23
@@ -65,13 +63,13 @@ def importCSV():
                 # TODO importcsv-3 extract company data and append to company list 
                 # as a dict only with company data if all is present
                 company_data = {
-                    "name": row[name],
-                    "address": row[address],
-                    "city": row[city],
-                    "country": row[country],
-                    "state": row[state],
-                    "zip": row[zip],
-                    "website": row[website]
+                    "name": row["name"],
+                    "address": row["address"],
+                    "city": row["city"],
+                    "country": row["country"],
+                    "state": row["state"],
+                    "zip": row["zip"],
+                    "website": row["website"]
                 }
                 if all(company_data.values()):
                     companies.append(company_data)
@@ -83,10 +81,10 @@ def importCSV():
                 # TODO importcsv-4 extract employee data and append to employee list 
                 # as a dict only with employee data if all is present
                 employee_data = {
-                    "first_name": row[first_name],
-                    "last_name": row[last_name],
-                    "email": row[email],
-                    "company_id": row[company_id],
+                    "first_name": row["first_name"],
+                    "last_name": row["last_name"],
+                    "email": row["email"],
+                    "company_id": row["company_id"],
                 }
                 if all(employee_data.values()):
                     employees.append(employee_data)
