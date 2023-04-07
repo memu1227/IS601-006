@@ -53,9 +53,9 @@ def importCSV():
             # Note: this reads the file as a stream instead of requiring us to save it
             stream = io.TextIOWrapper(file.stream._file, "UTF8", newline=None)
             # TODO importcsv-2 read the csv file stream as a dict
-            import csv
+            #import csv
             filename_dict = csv.DictReader(stream)
-            
+            import csv
             '''
             UCID: mm2836
             Date Implemented: 04/06/23
