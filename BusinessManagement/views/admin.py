@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, request, redirect, flash
 from werkzeug.utils import secure_filename
 from sql.db import DB
 import traceback
+import csv
 admin = Blueprint('admin', __name__, url_prefix='/admin')
 
 @admin.route("/import", methods=["GET","POST"])
@@ -52,7 +53,6 @@ def importCSV():
             # Note: this reads the file as a stream instead of requiring us to save it
             stream = io.TextIOWrapper(file.stream._file, "UTF8", newline=None)
             # TODO importcsv-2 read the csv file stream as a dict
-            import csv
             filename_dict = csv.DictReader(stream)
             '''
             UCID: mm2836
