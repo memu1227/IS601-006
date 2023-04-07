@@ -60,7 +60,7 @@ def importCSV():
             UCID: mm2836
             Date Implemented: 04/06/23
             '''
-            for row in ...:
+            for row in filename_dict:
                 #pass # todo remove
                 # print(row) #example
                 # TODO importcsv-3 extract company data and append to company list 
