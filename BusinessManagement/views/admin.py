@@ -66,13 +66,13 @@ def importCSV():
                 # TODO importcsv-3 extract company data and append to company list 
                 # as a dict only with company data if all is present
                 company_data = {
-                    "name": companies[0],
-                    "address": companies[1],
-                    "city": companies[2],
-                    "country": companies[3],
-                    "state": companies[4],
-                    "zip": companies[5],
-                    "website": companies[6]
+                    "name": row["name"],
+                    "address": row["address"],
+                    "city": row["city"],
+                    "country": row["country"],
+                    "state": row["state"],
+                    "zip": row["zip"],
+                    "website": row["website"]
                 }
                 if all(company_data.values()):
                     companies.append(company_data)
@@ -84,10 +84,10 @@ def importCSV():
                 # TODO importcsv-4 extract employee data and append to employee list 
                 # as a dict only with employee data if all is present
                 employee_data = {
-                    "first_name": employees[0],
-                    "last_name": employees[1],
-                    "email": employees[2],
-                    "company_id": employees[3],
+                    "first_name": row["first_name"],
+                    "last_name": row["last_name"],
+                    "email": row["email"],
+                    "company_id": row["company_name"],
                 }
                 if all(employee_data.values()):
                     employees.append(employee_data)
