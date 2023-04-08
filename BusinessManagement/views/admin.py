@@ -75,7 +75,14 @@ def importCSV():
                     "website": row["web"]
                 }
                 if all(company_data.values()):
-                    companies.append(company_data)
+                    dup_company = False
+                    for c in companies:
+                        if c['name'] == company_data['name']:
+                            dup_company = True
+                            break
+                    if not dup_company:
+                        companies.append(company_data)
+                    
                 '''
                 UCID: mm2836
                 Date Implemented: 04/06/23
@@ -87,7 +94,7 @@ def importCSV():
                     "first_name": row["first_name"],
                     "last_name": row["last_name"],
                     "email": row["email"],
-                    "company_id": row["company_id"],
+                    "company_name": row["company_name"]
                 }
                 if all(employee_data.values()):
                     employees.append(employee_data)
