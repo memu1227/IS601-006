@@ -102,28 +102,28 @@ def importCSV():
                     result = DB.insertMany(company_query, companies)
                     # TODO importcsv-5 display flash message about number of companies inserted
                     flash(f"{len(companies)} companies were successfully inserted.", "success")
-                    pass
+                    
                 except Exception as e:
                     traceback.print_exc()
                     flash("There was an error loading in the csv data", "danger")
             else:
                 # TODO importcsv-6 display flash message (info) that no companies were loaded
                 flash(f"No companies were loaded","info")
-                pass
+                
             if len(employees) > 0:
                 print(f"Inserting or updating {len(employees)} employees")
                 try:
                     result = DB.insertMany(employee_query, employees)
                     # TODO importcsv-7 display flash message about number of employees loaded
                     flash(f"{len(employees)} were successfully loaded.", "success")
-                    pass
+                    
                 except Exception as e:
                     traceback.print_exc()
                     flash("There was an error loading in the csv data", "danger")
             else:
                 # TODO importcsv-8 display flash message (info) that no employees were loaded
                 flash(f"No employees were loaded","info")
-                pass
+                
             '''
             UCID: mm2836
             Date Implemented: 04/06/23
