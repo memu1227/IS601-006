@@ -8,11 +8,19 @@ def search():
     rows = []
     # DO NOT DELETE PROVIDED COMMENTS
     # TODO search-1 retrieve employee id as id, first_name, last_name, email, company_id, company_name using a LEFT JOIN
-    query = """SELECT ...
-    FROM ... LEFT JOIN ... WHERE 1=1"""
+    query = """SELECT employee.id as "id", first_name, last_name, email, company_id, company_name
+    FROM employee LEFT JOIN company
+    ON employee.company_id = company.id
+    WHERE 1=1"""
     args = {} # <--- add values to replace %s/%(named)s placeholders
     allowed_columns = ["first_name", "last_name", "email", "company_name"]
     # TODO search-2 get fn, ln, email, company, column, order, limit from request args
+    first_name = request.args.get('first name')
+    last_name = request.args.get('last_name')
+    email = request.args.get('email')
+    company_name = request.args.get('company_name')
+    order = request.args.get('order')
+    limit = request.args.get('limit',default=10, type = int)
     # TODO search-3 append like filter for first_name if provided
     # TODO search-4 append like filter for last_name if provided
     # TODO search-5 append like filter for email if provided
@@ -36,7 +44,7 @@ def search():
     # hint: use allowed_columns in template to generate sort dropdown
     # hint2: convert allowed_columns into a list of tuples representing (value, label)
     # do this prior to passing to render_template, but not before otherwise it can break validation
-   
+
     return render_template("list_employees.html", rows=rows, allowed_columns=allowed_columns)
 
 @employee.route("/add", methods=["GET","POST"])
@@ -100,7 +108,6 @@ def edit():
             result = DB.selectOne("""SELECT 
             ...
             FROM ... LEFT JOIN ... 
-              
               WHERE ..."""
             , id)
             if result.status:
