@@ -30,35 +30,15 @@
                 <input type="text" class="form-control" id="email" name="email" value="{{ request.args.get('email', '') }}">
             </div>
             <div class="col">
-                <label for="company">Company:</label>
-                <select class="form-control" id="company" name="company">
-                    <option value="{{ request.args.get('company', '') }}"></option>
-                </select>
+                <label class="visually-hidden" for="company">Company</label>
+                {{company_dropdown(request.args.get("company"))}}
             </div>
-            <div class="col">
-                <label for="sort">Sort by:</label>
-                <select class="form-control" id="sort" name="sort">
-                    {% for column, label in allowed_columns %}
-                    <option value="{{column}}" {% if request.args.get('sort') == column %}selected{% endif %}}>{{label}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col">
-                <label for="order">Order:</label>
-                <select class="form-control" id="order" name="order">
-                    <option value="asc" {% if request.args.get('order') == 'asc' %}selected{% endif %}}>Ascending</option>
-                    <option value="desc" {% if request.args.get('order') == 'desc' %}selected{% endif %}}>Descending</option>
-                </select>
-            </div>
+            {{sort_filter(cols= allowed_columns)}}
             <div class="col">
                 <label for="limit">Limit:</label>
                 <input type="number" class="form-control" id="limit" name="limit" value="{{ request.args.get('limit', '10') }}">
             </div>
-            <div class="col">
-                <label class="visually-hidden" for="company">Company</label>
-                {{company_dropdown(request.args.get("company"))}}
-            </div>
-            {{sort_filter(cols=[first_name,last_name,email,company])}}
+            <!-- UCID: mm2836; Date Implemented: 04/07/23 -->
             <div class="col">
                 <input type="submit" class="btn btn-primary" value="Filter" />
             </div>
@@ -73,6 +53,13 @@
             <tr class="text-capitalize">
                 {# generate th tags for each column to display #}
                 {# IMPORTANT use table column names as the headings, replace _ with space via filter #}
+                <th>id</th>
+                <th>first name</th>
+                <th>last name</th>
+                <th>company name</th>
+                <th>company id</th>
+                <th>Actions</th>
+
             </tr>
         </thead>
         <tbody>
@@ -81,7 +68,20 @@
             an edit button that passes the employee id to employee edit
             a delete button that passes the employee id and the request args to the employee delete route
             #}
-
+            {% for employee in rows %}
+            <tr>
+                <td>{{ employee.id }}</td>
+                <td>{{ employee.first_name }}</td>
+                <td>{{ employee.last_name }}</td>
+                <td>{{ employee.email }}</td>
+                <td>{{ employee.company_name }}</td>
+                <td>{{ employee.company_id</td>
+                <td>
+                    <a href="{{ url_for('employee.edit', id=employee.id) }}" class="btn btn-primary">Edit</a>
+                    <a href="{{ url_for('employee.delete', id=employee.id, **request.args) }}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            <!-- UCID: mm2836; Date Implemented: 04/07/23 -->
         </tbody>
         {% else %}
         <tbody>
