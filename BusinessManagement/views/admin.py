@@ -94,7 +94,7 @@ def importCSV():
                     "first_name": row["first_name"],
                     "last_name": row["last_name"],
                     "email": row["email"],
-                    "company_name": row["company_name"]
+                    "company_id": row["company_name"]
                 }
                 if all(employee_data.values()):
                     employees.append(employee_data)
