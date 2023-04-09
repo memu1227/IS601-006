@@ -16,13 +16,49 @@
         limit (default 10)
         ensure all fields prefill with request arg data if provided
         #}
-
         <div class="row">
+            <div class="col">
+                <label for="fn">First Name:</label>
+                <input type="text" class="form-control" id="fn" name="fn" value="{{ request.args.get('fn', '') }}">
+            </div>
+            <div class="col">
+                <label for="ln">Last Name:</label>
+                <input type="text" class="form-control" id="ln" name="ln" value="{{ request.args.get('ln', '') }}">
+            </div>
+            <div class="col">
+                <label for="email">Email:</label>
+                <input type="text" class="form-control" id="email" name="email" value="{{ request.args.get('email', '') }}">
+            </div>
+            <div class="col">
+                <label for="company">Company:</label>
+                <select class="form-control" id="company" name="company">
+                    <option value="{{ request.args.get('company', '') }}"></option>
+                </select>
+            </div>
+            <div class="col">
+                <label for="sort">Sort by:</label>
+                <select class="form-control" id="sort" name="sort">
+                    {% for column, label in allowed_columns %}
+                    <option value="{{column}}" {% if request.args.get('sort') == column %}selected{% endif %}}>{{label}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col">
+                <label for="order">Order:</label>
+                <select class="form-control" id="order" name="order">
+                    <option value="asc" {% if request.args.get('order') == 'asc' %}selected{% endif %}}>Ascending</option>
+                    <option value="desc" {% if request.args.get('order') == 'desc' %}selected{% endif %}}>Descending</option>
+                </select>
+            </div>
+            <div class="col">
+                <label for="limit">Limit:</label>
+                <input type="number" class="form-control" id="limit" name="limit" value="{{ request.args.get('limit', '10') }}">
+            </div>
             <div class="col">
                 <label class="visually-hidden" for="company">Company</label>
                 {{company_dropdown(request.args.get("company"))}}
             </div>
-            {{sort_filter(cols=[...])}}
+            {{sort_filter(cols=[first_name,last_name,email,company])}}
             <div class="col">
                 <input type="submit" class="btn btn-primary" value="Filter" />
             </div>
@@ -37,8 +73,6 @@
             <tr class="text-capitalize">
                 {# generate th tags for each column to display #}
                 {# IMPORTANT use table column names as the headings, replace _ with space via filter #}
-
-                <th>Actions</th>
             </tr>
         </thead>
         <tbody>

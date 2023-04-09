@@ -12,20 +12,44 @@ def search():
     query = "... WHERE 1=1"
     args = {} # <--- add values to replace %s/%(named)s placeholders
     allowed_columns = ["name", "city", "country", "state"]
+    order_options = ['asc','desc']
     # TODO search-2 get name, country, state, column, order, limit request args
+    name = request.args.get('company_name')
+    country = request.args.get('country')
+    state = request.args.get('state')
+    column = request.args.get("column")
+    order = request.args.get('order')
+    limit = request.args.get('limit',default=10, type = int)
     # TODO search-3 append a LIKE filter for name if provided
+    if name:
+        query += " company.name LIKE %(company_name)s"
+        args["company_name"] = f"%{name}%"
     # TODO search-4 append an equality filter for country if provided
+    if country:
+        query += " AND company.country = %(country)s"
+        args["country"] = f"%{country}%"
     # TODO search-5 append an equality filter for state if provided
-    # TODO search-6 append sorting if column and order are provided and within the allows columsn and allowed order asc,desc
-    # TODO search-7 append limit (default 10) or limit greater than 1 and less than or equal to 100
-    # TODO search-8 provide a proper error message if limit isn't a number or if it's out of bounds
-    
-
-    limit = 10 # TODO change this per the above requirements
+    if state:
+        query += " AND company.state = %(state)s"
+        args["state"] = f"%{state}%"
+    # TODO search-7 append sorting if column and order are provided and within the allowed columns and order options (asc, desc)
+    if column in allowed_columns and order in order_options:
+        query += f" ORDER BY {column} {order}"
+    # TODO search-8 append limit (default 10) or limit greater than 1 and less than or equal to 100
     query += " LIMIT %(limit)s"
     args["limit"] = limit
-    print("query",query)
-    print("args", args)
+    try:
+        limit = int(limit)
+        if limit >= 100 or limit < 1:
+            flash("Invalid Limit. Limit must be between 1 and 100","error")
+        query += " LIMIT %(limit)s" # TODO change this per the above requirements
+        args["limit"] = limit
+        print("query",query)
+        print("args", args)
+    # TODO search-9 provide a proper error message if limit isn't a number or if it's out of bounds
+    except ValueError:
+        flash("Limit must be an integer","error")
+
     try:
         result = DB.selectAll(query, args)
         #print(f"result {result.rows}")
