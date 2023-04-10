@@ -15,8 +15,24 @@
     #}
     <form method="GET">
         <div class="row">
+            <div class = "col">
+                <label for="name">Company Name:</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ request.args.get('name', '') }}">
+            </div>
             {{country_state_selector(layout="horizontal")}}
-            {{sort_filter(cols=[first_name,last_name,email,company])}}
+            {{sort_filter(cols=allowed_columns)}}
+            <div class="form-group">
+                <label for="order">Order</label>
+                <select name="order" id="order" class="form-control">
+                    <option value="asc" {% if request.args.get('order') == 'asc' %}selected{% endif %}>Ascending</option>
+                    <option value="desc" {% if request.args.get('order') == 'desc' %}selected{% endif %}>Descending</option>
+                </select>
+            </div>
+            <div class="col">
+                <label for="limit">Limit:</label>
+                <input type="number" class="form-control" id="limit" name="limit" value="{{ request.args.get('limit', '10') }}">
+            </div>
+            <!-- UCID: mm2836, Date Implemented 04/09/23-->
             <div class="col">
                 <input type="submit" class="btn btn-primary" value="Filter" />
             </div>
@@ -32,9 +48,18 @@
                 <tr class="text-capitalize">
                     {# generate th tags for each column to display #}
                     {# IMPORTANT use table column names as the headings, replace _ with space via filter #}
-
+                    <th>id</th>
+                    <th>name</th>
+                    <th>address</th>
+                    <th>city</th>
+                    <th>country</th>
+                    <th>state</th>
+                    <th>zipcode</th>
+                    <th>website</th>
+                    <th>employees</th>
                     <th>Actions</th>
                 </tr>
+                <!-- UCID: mm2836, Date Implemented: 04/09/23-->
             </thead>
             <tbody>
                 {# generate tr with td tags for each piece of data #}
@@ -46,7 +71,24 @@
                 an edit button that passes the company id to company edit
                 a delete button that passes the company id and the request args to the company delete route
                 #}
-
+                {% for row in rows %}
+                <tr>
+                    <td>{{ row.id }}</td>
+                    <td>{{ row.name }}</td>
+                    <td>{{ row.address }}</td>
+                    <td>{{ row.city }}</td>
+                    <td>{{ row.country }}</td>
+                    <td>{{ row.state }}</td>
+                    <td>{{ row.zipcode }}</td>
+                    <td><a href="{{ row.website }}">website</a></td>
+                    <td>{{ row.employees }}</td>
+                    <td>
+                        <a href="{{url_for('company.edit', id=row.id)}}">Edit</a>
+                        <a href="{{url_for('company.delete', id=row.id)}}">Delete</a>
+                    </td>
+                </tr>
+                <!-- UCID: mm2836, Date Implemented: 04/09/23-->
+                {% endfor %}
             </tbody>
             {% else %}
             <tbody>

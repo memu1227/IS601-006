@@ -9,7 +9,10 @@ def search():
     order_options = ['asc','desc']
     # DO NOT DELETE PROVIDED COMMENTS
     # TODO search-1 retrieve employee id as id, first_name, last_name, email, company_id, company_name using a LEFT JOIN
-    query = "SELECT employee.id as 'id', employee.first_name, employee.last_name, employee.email, employee.company_id, employee.company_name FROM IS601_MP3_Employees employee LEFT JOIN IS601_MP3_Companies companies ON employee.company_id = companies.id WHERE 1=1"
+    query = """SELECT employee.id as 'id', employee.first_name, employee.last_name, employee.email, employee.company_id, companies.name as company_name 
+    FROM IS601_MP3_Employees employee 
+    LEFT JOIN IS601_MP3_Companies companies ON employee.company_id = companies.id 
+    WHERE 1=1"""
     args = {} # <--- add values to replace %s/%(named)s placeholders
     allowed_columns = ["first_name", "last_name", "email", "company_name"]
     # TODO search-2 get fn, ln, email, company, column, order, limit from request args
@@ -65,8 +68,8 @@ def search():
             rows = result.rows
     except Exception as e:
         # TODO search-10 make message user friendly
-        flash("An error occurred. Please try again.", "error")
-        print("The error occurred while searching for employees: {e}")
+        flash(f"An error occurred while searching for employees: {str(e)}. Please try again.", "danger")
+
     
     # hint: use allowed_columns in template to generate sort dropdown
     # hint2: convert allowed_columns into a list of tuples representing (value, label)
@@ -82,10 +85,10 @@ def search():
 def add():
     if request.method == "POST":
         # TODO add-1 retrieve form data for first_name, last_name, company, email
-        first_name = str(request.form.get("first_name"))
-        last_name = str(request.form.get("last_name"))
-        company = str(request.form.get("company"))
-        email = str(request.form.get("email"))
+        first_name = request.form.get("first_name",type = str)
+        last_name = request.form.get("last_name",type = str)
+        company = request.form.get("company",type = str)
+        email = request.form.get("email", type = str)
 
         has_error = False # use this to control whether or not an insert occurs
         # TODO add-2 first_name is required (flash proper error message)
@@ -99,6 +102,7 @@ def add():
         # TODO add-4 company (may be None)
         if not company:
             company = None
+            has_error = False
         # TODO add-5 email is required (flash proper error message)
         if not email:
             flash("Email is required","error")
@@ -119,7 +123,7 @@ def add():
                     flash("Created Employee Record", "success")
             except Exception as e:
                 # TODO add-7 make message user friendly
-                flash("An error occurred while creating employee", "danger")
+                flash(f"An error occurred while creating employee: {str(e)}", "danger")
     return render_template("add_employee.html")
     '''
     UCID: mm2836, Date Implemented: 04/07/23
@@ -134,10 +138,10 @@ def edit():
         if request.method == "POST":
             
             # TODO edit-1 retrieve form data for first_name, last_name, company, email
-            first_name = str(request.form.get('first_name'))
-            last_name = str(request.form.get('last_name'))
-            company = str(request.form.get('company'))
-            email = str(request.form.get('email'))
+            first_name = request.form.get('first_name', type = str)
+            last_name = request.form.get('last_name',type = str)
+            company = request.form.get('company',type = str)
+            email = request.form.get('email',type = str)
             has_error = False # use this to control whether or not an insert occurs
             # TODO add-2 first_name is required (flash proper error message)
             if not first_name:
@@ -216,7 +220,7 @@ def delete():
     # TODO delete-2 redirect to employee search
     return redirect(url_for("employee.search", **args))
     pass
-'''
+''' 
 UCID: mm2836, Date Implemented: 04/07/23
 '''
     

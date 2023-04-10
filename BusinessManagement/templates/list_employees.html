@@ -32,8 +32,16 @@
             <div class="col">
                 <label class="visually-hidden" for="company">Company</label>
                 {{company_dropdown(request.args.get("company"))}}
+                <input type="text" class="form-control" id="company" name="company" value="{{ request.args.get('id', '') }}">
             </div>
             {{sort_filter(cols= allowed_columns)}}
+            <div class="form-group">
+                <label for="order">Order</label>
+                <select name="order" id="order" class="form-control">
+                    <option value="asc" {% if request.args.get('order') == 'asc' %}selected{% endif %}>Ascending</option>
+                    <option value="desc" {% if request.args.get('order') == 'desc' %}selected{% endif %}>Descending</option>
+                </select>
+            </div>
             <div class="col">
                 <label for="limit">Limit:</label>
                 <input type="number" class="form-control" id="limit" name="limit" value="{{ request.args.get('limit', '10') }}">
@@ -75,12 +83,13 @@
                 <td>{{ employee.last_name }}</td>
                 <td>{{ employee.email }}</td>
                 <td>{{ employee.company_name }}</td>
-                <td>{{ employee.company_id</td>
+                <td>{{ employee.company_id }}</td>
                 <td>
                     <a href="{{ url_for('employee.edit', id=employee.id) }}" class="btn btn-primary">Edit</a>
                     <a href="{{ url_for('employee.delete', id=employee.id, **request.args) }}" class="btn btn-danger">Delete</a>
                 </td>
             </tr>
+            {% endfor %}
             <!-- UCID: mm2836; Date Implemented: 04/07/23 -->
         </tbody>
         {% else %}
