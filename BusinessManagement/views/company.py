@@ -48,6 +48,7 @@ def search():
         limit = int(limit)
         if limit >= 100 or limit < 1:
             flash("Invalid Limit. Limit must be between 1 and 100","error")
+            limit = 10
         query += " LIMIT %(limit)s" # TODO change this per the above requirements
         args["limit"] = limit
         print("query",query)
@@ -64,7 +65,7 @@ def search():
             print(f"rows {rows}")
     except Exception as e:
         # TODO search-9 make message user friendly
-        flash(f"There was a n error running the query: {str(e)}", "danger")
+        flash(f"There was an error running the query: {str(e)}", "danger")
     # hint: use allowed_columns in template to generate sort dropdown
     # hint2: convert allowed_columns into a list of tuples representing (value, label)
     # do this prior to passing to render_template, but not before otherwise it can break validation

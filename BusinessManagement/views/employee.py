@@ -6,7 +6,6 @@ employee = Blueprint('employee', __name__, url_prefix='/employee')
 @employee.route("/search", methods=["GET"])
 def search():
     rows = []
-    order_options = ['asc','desc']
     # DO NOT DELETE PROVIDED COMMENTS
     # TODO search-1 retrieve employee id as id, first_name, last_name, email, company_id, company_name using a LEFT JOIN
     query = """SELECT employee.id as 'id', employee.first_name, employee.last_name, employee.email, employee.company_id, companies.name as company_name 

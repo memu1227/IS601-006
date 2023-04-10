@@ -17,13 +17,13 @@
         <div class="row">
             <div class = "col">
                 <label for="name">Company Name:</label>
-                <input type="text" class="form-control" id="name" name="name" value="{{ request.args.get('name', '') }}">
+                <input type="text" class="form-control" id="name" name="name" value="{{ request.args.get('name') }}">
             </div>
             {{country_state_selector(layout="horizontal")}}
             {{sort_filter(cols=allowed_columns)}}
             <div class="col">
                 <label for="limit">Limit:</label>
-                <input type="number" class="form-control" id="limit" name="limit" value="{{ request.args.get('limit', '10') }}">
+                <input type="number" class="form-control" id="limit" name="limit" value="{{ request.args.get('limit') }}">
             </div>
             <!-- UCID: mm2836, Date Implemented 04/09/23-->
             <div class="col">
