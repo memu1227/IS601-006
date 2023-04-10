@@ -21,13 +21,6 @@
             </div>
             {{country_state_selector(layout="horizontal")}}
             {{sort_filter(cols=allowed_columns)}}
-            <div class="form-group">
-                <label for="order">Order</label>
-                <select name="order" id="order" class="form-control">
-                    <option value="asc" {% if request.args.get('order') == 'asc' %}selected{% endif %}>Ascending</option>
-                    <option value="desc" {% if request.args.get('order') == 'desc' %}selected{% endif %}>Descending</option>
-                </select>
-            </div>
             <div class="col">
                 <label for="limit">Limit:</label>
                 <input type="number" class="form-control" id="limit" name="limit" value="{{ request.args.get('limit', '10') }}">
