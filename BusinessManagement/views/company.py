@@ -1,7 +1,6 @@
 from flask import Blueprint, redirect, render_template, request, flash, url_for
 from sql.db import DB
 import pycountry
-from geography import is_valid_state, is_valid_country
 company = Blueprint('company', __name__, url_prefix='/company')
 
 @company.route("/search", methods=["GET"])
@@ -105,7 +104,7 @@ def add():
             has_error = True
         # TODO add-5a state should be a valid state mentioned in pycountry for the selected state
         # hint see geography.py and pycountry documentation
-        elif is_valid_state(state,country):
+        elif country and state not in [s.name for s in pycountry.subdivisions.get(country_code=country)]:
             flash(f"Invalid state", "danger")
             has_error = True
         '''
@@ -116,7 +115,7 @@ def add():
             flash(f"Country is required", "danger")
             has_error = True
         # TODO add-6a country should be a valid country mentioned in pycountry
-        elif is_valid_country(country):
+        elif country not in [c.alpha_2 for c in pycountry.countries]:
             flash(f"Invalid country", "danger")
             has_error = True
         # hint see geography.py and pycountry documentation
@@ -169,7 +168,7 @@ def edit():
             has_error = False # use this to control whether or not an insert occurs
             if not name:
                 flash(f"Company Name is Required", "danger")
-            has_error = True
+                has_error = True
             # TODO add-3 address is required (flash proper error message)
             if not address:
                 flash(f"Address is Required", "danger")
@@ -184,7 +183,7 @@ def edit():
                 has_error = True
             # TODO add-5a state should be a valid state mentioned in pycountry for the selected state
             # hint see geography.py and pycountry documentation
-            elif is_valid_state(state,country):
+            elif country and state not in [s.name for s in pycountry.subdivisions.get(country_code=country)]:
                 flash(f"Invalid state", "danger")
                 has_error = True
             '''
@@ -195,7 +194,7 @@ def edit():
                 flash(f"Country is required", "danger")
                 has_error = True
             # TODO add-6a country should be a valid country mentioned in pycountry
-            elif is_valid_country(country):
+            elif country not in [c.alpha_2 for c in pycountry.countries]:
                 flash(f"Invalid country", "danger")
                 has_error = True
             # hint see geography.py and pycountry documentation
