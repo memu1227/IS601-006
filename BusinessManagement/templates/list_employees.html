@@ -32,7 +32,6 @@
             <div class="col">
                 <label class="visually-hidden" for="company">Company</label>
                 {{company_dropdown(request.args.get("company"))}}
-                <input type="text" class="form-control" id="company" name="company" value="{{ request.args.get('id', '') }}">
             </div>
             {{sort_filter(cols= allowed_columns)}}
             <div class="col">
