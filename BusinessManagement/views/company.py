@@ -103,9 +103,9 @@ def add():
             flash(f"State is Required", "danger")
         # TODO add-5a state should be a valid state mentioned in pycountry for the selected state
         # hint see geography.py and pycountry documentation
-        elif state not in [s.name for s in pycountry.subdivisions.get(country_code=country)]:
+        elif state not in pycountry.subdivisions.get(country_code=country.strip()):
             has_error = True
-            flash(f"Invalid state for {country}", "danger")
+            flash(f"Invalid State for {country}", "danger")
         '''
         UCID: mm2836, Date Implemented: 04/08/23
         '''
@@ -116,7 +116,7 @@ def add():
         # TODO add-6a country should be a valid country mentioned in pycountry
         elif country not in [c.alpha_2 for c in pycountry.countries]:
             has_error = True
-            flash(f"Invalid country", "danger")
+            flash(f"Invalid Country", "danger")
         # hint see geography.py and pycountry documentation
         # TODO add-7 website is not required
         if not website:
@@ -254,7 +254,8 @@ def edit():
 @company.route("/delete", methods=["GET"])
 def delete():
     # TODO delete-6 if id is missing, flash necessary message and redirect to search
-    if not request.args.get('id'):
+    id = request.args.get("id")
+    if not id:
         flash(f"Company ID is Required", "danger")
         return redirect(url_for("company.search"))
     else:

@@ -193,12 +193,13 @@ def edit():
 @employee.route("/delete", methods=["GET"])
 def delete():
     # TODO delete-5 if id is missing, flash necessary message and redirect to search
-    if not request.args.get("id"):
+    id = request.args.get("id")
+    if not id:
         flash("Employee ID is required.", "danger")
         return redirect(url_for("employee.search"))
     else:
     # TODO delete-1 delete employee by id
-        result = DB.delete("""DELETE FROM employees WHERE id = %s""", id)
+        result = DB.delete("""DELETE FROM IS601_MP3_Employees WHERE id = %s""", id)
         if result.status:
             # TODO delete-4 ensure a flash message shows for successful delete
             flash("Employee record has been deleted.", "success")
