@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}Add Company{% endblock %}
+{% block content %}
+{% from "country_state_selector.html" import country_state_selector %}
+
+<div class="container-fluid">
+    <div class="h1">Add Company</div>
+    <div>
+        <form method="POST">
+            {#
+            using regular html generate fields (labels and input) with proper types for
+            name (required)
+            address (required)
+            city (required) (can be a text field, doesn't need to be a valid city)
+            state/country (required) (given)
+            zip (required)
+            website (optional)
+            if a validation error occurs, the inserted form data should persist
+            #}
+            <div class="form-group">
+                <label for="name">Company Name</label>
+                <input id="name" class="form-control" name="name" type="text" value="">
+            </div>
+            <div class="form-group">
+                <label for="address">Address </label>
+                <input id="address" class="form-control" name="address" type="text" value="">
+            </div>
+            <div class="form-group">
+                <label for="city">City</label>
+                <input id="city" class="form-control" name="city" type="text" value="">
+            </div>
+            <div class="form-group">
+                <label for="zip">Zipcode</label>
+                <input id="zip" class="form-control" name="zip" type="text" value="">
+            </div>
+            <div class="form-group">
+                <label for="website">Website</label>
+                <input id="website" class="form-control" name="website" type="url" value="">
+                <!-- UCID: mm2836, Date Implemented: 04/09/23-->
+            </div>
+            {# use this for country/state selection #}
+            {{country_state_selector()}}
+            <input type="submit" class="btn btn-primary" value="Save Company" />
+        </form>
+    </div>
+</div>
+{% endblock %}
