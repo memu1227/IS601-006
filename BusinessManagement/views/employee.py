@@ -128,17 +128,16 @@ def add():
 @employee.route("/edit", methods=["GET", "POST"])
 def edit():
     # TODO edit-1 request args id is required (flash proper error message)
-    id = False
-    if not request.args.get('id'): # TODO update this for TODO edit-1
+    id = request.args.get('id')
+    if not id: # TODO update this for TODO edit-1
         flash("Employee ID is required.", "error")
     else:
         if request.method == "POST":
             
             # TODO edit-1 retrieve form data for first_name, last_name, company, email
             first_name = request.form.get('first_name', type = str)
-            last_name = request.form.get('last_name',type = str)\
-            # TODO add-4 company (may be None)
-            company = request.form.get('company',type = str) or None
+            last_name = request.form.get('last_name',type = str)
+            company_id= request.form.get('company', type = str)
             email = request.form.get('email',type = str)
             has_error = False # use this to control whether or not an insert occurs
             # TODO add-2 first_name is required (flash proper error message)
@@ -149,6 +148,9 @@ def edit():
             if not last_name:
                 flash("Last name is required","error")
                 has_error = True
+            # TODO add-4 company (may be None)
+            if not company_id:
+                company_id = None
             # TODO add-5 email is required (flash proper error message)
             if not email:
                 flash("Email is required","error")
@@ -163,14 +165,9 @@ def edit():
             if not has_error:
                 try:
                     # TODO edit-6 fill in proper update query
-                    result = DB.update("""
-                    UPDATE IS601_MP3_Employees SET
-                    first_name=%s,
-                    last_name=%s,
-                    company_id=%s,
-                    email=%s
-                    WHERE id = %s
-                    """, (first_name, last_name, company, email,id))
+                    result = DB.update("""UPDATE IS601_MP3_Employees 
+                    SET first_name = %s, last_name = %s, company_id = %s, email = %s WHERE id = %s
+                    """,first_name,last_name,company_id, email, id)
                     if result.status:
                         flash("Updated record", "success")
                 except Exception as e:
@@ -179,21 +176,17 @@ def edit():
         row = {}
         try:
             # TODO edit-8 fetch the updated data 
-            result = DB.selectOne("""SELECT 
-            employee.first_name,
-            employee.last_name,
-            employee.company_name,
-            employee.email
-            FROM IS601_MP3_Employees employee LEFT JOIN IS601_MP3_Companies companies ON employee.company_id = companies.id
-            WHERE employee.id = %s"""
-            , id)
+            result = DB.selectOne("""SELECT employees.first_name, employees.last_name, employees.email, employees.company_id, 
+            IF(companies.name is not null, companies.name,'N/A') AS 
+            company_name FROM IS601_MP3_Employees employees LEFT JOIN IS601_MP3_Companies companies 
+            ON employees.company_id = companies.id WHERE employees.id = %s""", id)
             if result.status:
                 row = result.row
         except Exception as e:
             # TODO edit-9 make this user-friendly
             flash(f"Error fetching data: {str(e)}.", "danger")
     # TODO edit-10 pass the employee data to the render template
-    return render_template("edit_employee.html", row = row)
+    return render_template("edit_employee.html", employee = row)
     '''
     UCID: mm2836 Date Implemented: 04/07/23
     '''
