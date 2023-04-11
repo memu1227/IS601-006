@@ -103,9 +103,8 @@ def add():
             flash(f"State is Required", "danger")
         # TODO add-5a state should be a valid state mentioned in pycountry for the selected state
         # hint see geography.py and pycountry documentation
-        elif state not in pycountry.subdivisions.get(country_code=country.strip()):
-            has_error = True
-            flash(f"Invalid State for {country}", "danger")
+        
+        
         '''
         UCID: mm2836, Date Implemented: 04/08/23
         '''
