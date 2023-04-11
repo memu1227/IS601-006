@@ -9,55 +9,51 @@ def search():
     # DO NOT DELETE PROVIDED COMMENTS
     # TODO search-1 retrieve id, name, address, city, country, state, zip, website, employee count as employees for the company
     # don't do SELECT *
-    
-    query = """SELECT companies.id, companies.name, companies.address, companies.city, companies.country, companies.state, 
-    companies.zipcode, companies.website, COUNT(employee.id) AS employees FROM IS601_MP3_Companies companies 
+
+    query =  """SELECT companies.id, companies.name, companies.address, companies.city, companies.country, companies.state, 
+    companies.zip, companies.website, COUNT(employee.id) AS employees FROM IS601_MP3_Companies companies 
     LEFT JOIN IS601_MP3_Employees employee ON employee.company_id = companies.id WHERE 1=1 """
 
     args = {} # <--- add values to replace %s/%(named)s placeholders
     allowed_columns = ["name", "city", "country", "state"]
-    order_options = ['asc','desc']
     # TODO search-2 get name, country, state, column, order, limit request args
     name = request.args.get('name')
     country = request.args.get('country')
     state = request.args.get('state')
-    column = request.args.get("column")
+    column = request.args.get('column')
     order = request.args.get('order')
     limit = 10
-    limit = request.args.get('limit',default=10)
+    limit = request.args.get('limit')
     # TODO search-3 append a LIKE filter for name if provided
     if name:
-        query += " companies.name LIKE %(company_name)s"
-        args["company_name"] = f"%{name}%"
+        query += " AND companies.name like %(name)s"
+        args["name"] = f"%{name}%"
     # TODO search-4 append an equality filter for country if provided
     if country:
-        query += " AND companies.country = %(country)s"
-        args["country"] = f"%{country}%"
+        query += " AND country = %(country)s"
+        args["country"] = country
     # TODO search-5 append an equality filter for state if provided
     if state:
-        query += " AND companies.state = %(state)s"
-        args["state"] = f"%{state}%"
-    # TODO search-7 append sorting if column and order are provided and within the allowed columns and order options (asc, desc)
+        query += " AND state = %(state)s"
+        args["state"] = state
     query += " GROUP BY companies.id"
-    if column in allowed_columns and order in order_options:
-        query += f" ORDER BY {column} {order}"
+    # TODO search-6 append sorting if column and order are provided and within the allows columsn and allowed order asc,desc
+    if column and order:
+        if column in allowed_columns and order in ["asc", "desc"]:
+            query += f" ORDER BY {column} {order} "
     '''
     UCID: mm2836, Date Implemented: 04/08/23
     '''
     # TODO search-8 append limit (default 10) or limit greater than 1 and less than or equal to 100
-    query += " LIMIT %(limit)s"
-    args["limit"] = limit
-    try:
-        limit = int(limit)
-        if limit >= 100 or limit < 1:
-            flash("Invalid Limit. Limit must be between 1 and 100","error")
-        query += " LIMIT %(limit)s" # TODO change this per the above requirements
+
+    if limit and int(limit) > 0 and int(limit) <= 100:
+        query += f" LIMIT {limit}"
         args["limit"] = int(limit)
-        print("query",query)
-        print("args", args)
-    # TODO search-9 provide a proper error message if limit isn't a number or if it's out of bounds
-    except ValueError:
-        flash("Limit must be an integer","error")
+    elif limit and (int(limit) <= 0 or int(limit) > 100):
+        flash("Limit Out of Bounds. Please Enter a value between 1 and 100", 'warning')
+
+    print("query",query)
+    print("args", args)
 
     try:
         result = DB.selectAll(query, args)
@@ -85,61 +81,59 @@ def add():
         city = request.form.get('city',type = str)
         state = request.form.get('state',type = str)
         country = request.form.get('country',type = str)
-        zipcode = request.form.get('zipcode',type = str)
+        zip = request.form.get('zip',type = str)
         website = request.form.get('website',type = str)
 
         # TODO add-2 name is required (flash proper error message)
         has_error = False # use this to control whether or not an insert occurs
         if not name:
-            flash(f"Company Name is Required", "danger")
             has_error = True
+            flash(f"Company Name is Required", "danger")
         # TODO add-3 address is required (flash proper error message)
         if not address:
-            flash(f"Address is Required", "danger")
             has_error = True
+            flash(f"Address is Required", "danger")
         # TODO add-4 city is required (flash proper error message)
         if not city:
-            flash(f"City is Required", "danger")
             has_error = True
+            flash(f"City is Required", "danger")
         # TODO add-5 state is required (flash proper error message)
         if not state:
-            flash(f"State is Required", "danger")
             has_error = True
+            flash(f"State is Required", "danger")
         # TODO add-5a state should be a valid state mentioned in pycountry for the selected state
         # hint see geography.py and pycountry documentation
-        elif country and state not in [s.name for s in pycountry.subdivisions.get(country_code=country)]:
-            flash(f"Invalid state", "danger")
+        elif state not in [s.name for s in pycountry.subdivisions.get(country_code=country)]:
             has_error = True
+            flash(f"Invalid state for {country}", "danger")
         '''
         UCID: mm2836, Date Implemented: 04/08/23
         '''
         # TODO add-6 country is required (flash proper error message)
         if not country:
-            flash(f"Country is required", "danger")
             has_error = True
+            flash(f"Country is required", "danger")
         # TODO add-6a country should be a valid country mentioned in pycountry
         elif country not in [c.alpha_2 for c in pycountry.countries]:
-            flash(f"Invalid country", "danger")
             has_error = True
+            flash(f"Invalid country", "danger")
         # hint see geography.py and pycountry documentation
         # TODO add-7 website is not required
         if not website:
             website = None
-            has_error = False
         # TODO add-8 zipcode is required (flash proper error message)
-        if not zipcode:
-            flash(f"Zipcode is required.", "danger")
+        if not zip:
             has_error = True
+            flash(f"Zipcode is required.", "danger")
         # note: call zip variable zipcode as zip is a built in function it could lead to issues
 
         
         if not has_error:
             try:
-                result = DB.insertOne("""
-                INSERT INTO IS601_MP3_Companies
-                (name, address, city, country, state, zipcode, website) 
+                result = DB.insertOne(""" INSERT INTO IS601_MP3_Companies
+                (name, address, city, country, state, zip, website) 
                 VALUES(%s, %s, %s, %s, %s, %s, %s)
-                """, name, address, city, country, state, zipcode, website) # <-- TODO add-8 add query and add arguments
+                """, name, address, city, country, state, zip, website)  # <-- TODO add-8 add query and add arguments
                 if result.status:
                     flash("Added Company", "success")
             except Exception as e:
@@ -165,7 +159,7 @@ def edit():
             city = request.form.get('city',type = str)
             state = request.form.get('state',type = str)
             country = request.form.get('country',type = str)
-            zipcode = request.form.get('zipcode',type = str)
+            zip = request.form.get('zip',type = str)
             website = request.form.get('website',type = str)
             # TODO edit-2 name is required (flash proper error message)
             has_error = False # use this to control whether or not an insert occurs
@@ -206,7 +200,7 @@ def edit():
                 website = None
                 has_error = False
             # TODO add-8 zipcode is required (flash proper error message)
-            if not zipcode:
+            if not zip:
                 flash(f"Zipcode is required.", "danger")
                 has_error = True
             # note: call zip variable zipcode as zip is a built in function it could lead to issues
@@ -218,7 +212,7 @@ def edit():
                 "city": city,
                 "state": state,
                 "country": country,
-                "zipcode": zipcode,
+                "zip": zip,
                 "website": website
             }
             '''
@@ -232,7 +226,7 @@ def edit():
                     result = DB.update("""
                     UPDATE IS601_MP3_Companies
                     SET name = %s, address = %s, city = %s, country = %s, state = %s,
-                    zipcode = %s, website = %s
+                    zip = %s, website = %s
                     WHERE id = %s
                     """, data)
                     if result.status:
@@ -245,7 +239,7 @@ def edit():
         row = {}
         try:
             # TODO edit-11 fetch the updated data
-            result = DB.selectOne("SELECT name, address, city, country, state, zipcode, website FROM IS601_MP3_Companies WHERE id = %s", id)
+            result = DB.selectOne("SELECT name, address, city, country, state, zip, website FROM IS601_MP3_Companies WHERE id = %s", id)
             if result.status:
                 row = result.row
                 

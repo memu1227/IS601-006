@@ -17,7 +17,7 @@
         <div class="row">
             <div class = "col">
                 <label for="name">Company Name:</label>
-                <input type="text" class="form-control" name = "name" id="name" placeholder="name" value="{{ allowed_columns[0].value }}">
+                <input type="text" class="form-control" name = "name" id="name" placeholder="Name" value="{{ allowed_columns[0].value }}">
             </div>
             {{country_state_selector(layout="horizontal")}}
             {{sort_filter(cols=allowed_columns)}}
@@ -47,7 +47,7 @@
                     <th>city</th>
                     <th>country</th>
                     <th>state</th>
-                    <th>zipcode</th>
+                    <th>zip</th>
                     <th>website</th>
                     <th>employees</th>
                     <th>Actions</th>
@@ -72,7 +72,7 @@
                     <td>{{ company.city }}</td>
                     <td>{{ company.country }}</td>
                     <td>{{ company.state }}</td>
-                    <td>{{ company.zipcode }}</td>
+                    <td>{{ company.zip }}</td>
                     <td><a href="{{ company.website }}">website</a></td>
                     <td>{{ company.employees }}</td>
                     <td>
