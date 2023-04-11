@@ -84,36 +84,33 @@ def add():
         # TODO add-1 retrieve form data for first_name, last_name, company, email
         first_name = request.form.get("first_name",type = str)
         last_name = request.form.get("last_name",type = str)
-        company = request.form.get("company",type = str)
+        company = request.form.get("company",type = str) or None
         email = request.form.get("email", type = str)
 
         has_error = False # use this to control whether or not an insert occurs
         # TODO add-2 first_name is required (flash proper error message)
         if not first_name:
-            flash("First name is required","error")
             has_error = True
+            flash("First name is required","error")
         # TODO add-3 last_name is required (flash proper error message)
         if not last_name:
-            flash("Last name is required","error")
             has_error = True
-        # TODO add-4 company (may be None)
-        if not company:
-            company = None
+            flash("Last name is required","error")
         # TODO add-5 email is required (flash proper error message)
         if not email:
-            flash("Email is required","error")
             has_error = True
+            flash("Email is required","error")
         # TODO add-5a verify email is in the correct format
         if "@" not in email or "." not in email:
-            flash("Email not in valid format.","error")
             has_error = True
+            flash("Email not in valid format.","error")
         '''
         UCID: mm2836, Date Implemented: 04/08/23
         '''
         if not has_error:
             try:
                 result = DB.insertOne("""
-                INSERT INTO IS601_MP3_Employees (first_name, last_name, company, email)
+                INSERT INTO IS601_MP3_Employees (first_name, last_name, company_id, email)
                 VALUES (%s, %s, %s, %s)
                 """, (first_name, last_name, company, email)
                 ) # <-- TODO add-6 add query and add arguments

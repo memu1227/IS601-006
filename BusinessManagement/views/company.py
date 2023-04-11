@@ -23,6 +23,7 @@ def search():
     state = request.args.get('state')
     column = request.args.get("column")
     order = request.args.get('order')
+    limit = 10
     limit = request.args.get('limit',default=10)
     # TODO search-3 append a LIKE filter for name if provided
     if name:
