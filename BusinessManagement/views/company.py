@@ -97,6 +97,9 @@ def add():
         if not city:
             has_error = True
             flash(f"City is Required", "danger")
+        '''
+        UCID: mm1227 Date Implemented 04/09/23
+        '''
         # TODO add-6 country is required (flash proper error message)
         if not country:
             has_error = True
@@ -179,6 +182,9 @@ def edit():
             if not city:
                 flash(f"City is Required", "danger")
                 has_error = True
+            '''
+            UCID: mm2836 Date Implemented: 04/08/23
+            '''
             # TODO add-5 state is required (flash proper error message)
             if not state:
                 has_error = True
