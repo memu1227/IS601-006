@@ -165,6 +165,7 @@ def edit():
             country = request.form.get('country',type = str)
             zip = request.form.get('zip',type = str)
             website = request.form.get('website',type = str)
+
             # TODO edit-2 name is required (flash proper error message)
             has_error = False # use this to control whether or not an insert occurs
             if not name:
@@ -180,8 +181,8 @@ def edit():
                 has_error = True
             # TODO add-5 state is required (flash proper error message)
             if not state:
-                flash(f"State is Required", "danger")
                 has_error = True
+                flash(f"State is Required", "danger")
             # TODO add-5a state should be a valid state mentioned in pycountry for the selected state
             # hint see geography.py and pycountry documentation
             if hasattr(pycountry.subdivisions, f'get_subdivisions("{country}")'):
@@ -196,21 +197,21 @@ def edit():
             '''
             # TODO add-6 country is required (flash proper error message)
             if not country:
-                flash(f"Country is required", "danger")
                 has_error = True
+                flash(f"Country is required", "danger")
             # TODO add-6a country should be a valid country mentioned in pycountry
             elif country not in [c.alpha_2 for c in pycountry.countries]:
-                flash(f"Invalid country", "danger")
                 has_error = True
+                flash(f"Invalid country", "danger")
             # hint see geography.py and pycountry documentation
             # TODO add-7 website is not required
             if not website:
                 website = None
-                has_error = False
+
             # TODO add-8 zipcode is required (flash proper error message)
             if not zip:
-                flash(f"Zipcode is required.", "danger")
                 has_error = True
+                flash(f"Zipcode is required.", "danger")
             # note: call zip variable zipcode as zip is a built in function it could lead to issues
             # populate data dict with mappings
             #data = {
