@@ -8,10 +8,9 @@ def search():
     rows = []
     # DO NOT DELETE PROVIDED COMMENTS
     # TODO search-1 retrieve employee id as id, first_name, last_name, email, company_id, company_name using a LEFT JOIN
-    query = """SELECT employee.id as 'id', employee.first_name, employee.last_name, employee.email, employee.company_id, companies.name as company_name 
-    FROM IS601_MP3_Employees employee 
-    LEFT JOIN IS601_MP3_Companies companies ON employee.company_id = companies.id 
-    WHERE 1=1"""
+    query = """SELECT employee.id, employee.first_name, employee.last_name, employee.email, employee.company_id, IF(companies.name is not null, companies.name,'N/A') AS company_name 
+    FROM IS601_MP3_Employees employee LEFT JOIN IS601_MP3_Companies companies ON employee.company_id = companies.id WHERE 1=1"""
+    
     args = {} # <--- add values to replace %s/%(named)s placeholders
     allowed_columns = ["first_name", "last_name", "email", "company_name"]
     # TODO search-2 get fn, ln, email, company, column, order, limit from request args
@@ -21,7 +20,8 @@ def search():
     company = request.args.get('company')
     column = request.args.get("column")
     order = request.args.get('order')
-    limit = request.args.get('limit',default=10, type = int)
+    limit = 10
+    limit = request.args.get('limit')
     '''
     UCID: mm2836, Date Implemented: 04/07/23
     '''
@@ -39,8 +39,8 @@ def search():
         args["email"] = f"%{email}%"
     # TODO search-6 append equality filter for company_id if provided
     if company:
-        query += " AND employee.company_id = {company}"
-        args["company"] = f"%{company}%"
+        query += f" AND company_id = {company}"
+        
     # TODO search-7 append sorting if column and order are provided and within the allowed columns and order options (asc, desc)
     if column and order:
         if column in allowed_columns and order in ['asc','desc']:
@@ -49,16 +49,14 @@ def search():
     UCID: mm2836, Date Implemented: 04/07/23
     '''
     # TODO search-8 append limit (default 10) or limit greater than 1 and less than or equal to 100
-    try:
-        limit = int(limit)
-        if limit > 100 or limit < 1:
-            flash("Invalid Limit. Limit must be between 1 and 100","error")
-        else:
-            query += " LIMIT %(limit)s"
-            args["limit"] = int(limit)
+    
+    if limit and int(limit) > 0 and int(limit) <= 100:
+        query += f"LIMIT{limit}"
+        args["limit"] = int(limit)
     # TODO search-9 provide a proper error message if limit isn't a number or if it's out of bounds
-    except ValueError:
-        flash("Limit must be an integer","error")
+    elif limit and (int(limit) <= 0 or int(limit) > 100):
+        flash("Limit not in bounds. Please enter a limit between 1 and 100", 'warning')
+
     print("query",query)
     print("args", args)
     try:
@@ -101,7 +99,6 @@ def add():
         # TODO add-4 company (may be None)
         if not company:
             company = None
-            has_error = False
         # TODO add-5 email is required (flash proper error message)
         if not email:
             flash("Email is required","error")
@@ -110,7 +107,9 @@ def add():
         if "@" not in email or "." not in email:
             flash("Email not in valid format.","error")
             has_error = True
-
+        '''
+        UCID: mm2836, Date Implemented: 04/08/23
+        '''
         if not has_error:
             try:
                 result = DB.insertOne("""

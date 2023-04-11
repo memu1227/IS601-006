@@ -10,19 +10,20 @@ def search():
     # TODO search-1 retrieve id, name, address, city, country, state, zip, website, employee count as employees for the company
     # don't do SELECT *
     
-    query = """SELECT companies.id,companies.name,companies.address,companies.city,companies.state,companies.zip,companies.website,
-    COUNT(employee.id) as 'employees' FROM IS601_MP3_Companies companies LEFT JOIN IS601_MP3_Employees employee
-    ON employee.company_id = companies.id WHERE 1=1"""
+    query = """SELECT companies.id, companies.name, companies.address, companies.city, companies.country, companies.state, 
+    companies.zipcode, companies.website, COUNT(employee.id) AS employees FROM IS601_MP3_Companies companies 
+    LEFT JOIN IS601_MP3_Employees employee ON employee.company_id = companies.id WHERE 1=1 """
+
     args = {} # <--- add values to replace %s/%(named)s placeholders
     allowed_columns = ["name", "city", "country", "state"]
     order_options = ['asc','desc']
     # TODO search-2 get name, country, state, column, order, limit request args
-    name = request.args.get('company_name')
+    name = request.args.get('name')
     country = request.args.get('country')
     state = request.args.get('state')
     column = request.args.get("column")
     order = request.args.get('order')
-    limit = request.args.get('limit',default=10, type = int)
+    limit = request.args.get('limit',default=10)
     # TODO search-3 append a LIKE filter for name if provided
     if name:
         query += " companies.name LIKE %(company_name)s"
@@ -36,6 +37,7 @@ def search():
         query += " AND companies.state = %(state)s"
         args["state"] = f"%{state}%"
     # TODO search-7 append sorting if column and order are provided and within the allowed columns and order options (asc, desc)
+    query += " GROUP BY companies.id"
     if column in allowed_columns and order in order_options:
         query += f" ORDER BY {column} {order}"
     '''
@@ -48,9 +50,8 @@ def search():
         limit = int(limit)
         if limit >= 100 or limit < 1:
             flash("Invalid Limit. Limit must be between 1 and 100","error")
-            limit = 10
         query += " LIMIT %(limit)s" # TODO change this per the above requirements
-        args["limit"] = limit
+        args["limit"] = int(limit)
         print("query",query)
         print("args", args)
     # TODO search-9 provide a proper error message if limit isn't a number or if it's out of bounds
