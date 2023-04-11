@@ -82,38 +82,40 @@ def search():
 def add():
     if request.method == "POST":
         # TODO add-1 retrieve form data for first_name, last_name, company, email
-        first_name = request.form.get("first_name",type = str)
-        last_name = request.form.get("last_name",type = str)
-        company = request.form.get("company",type = str) or None
+        first_name = request.form.get("first_name", type = str)
+        last_name = request.form.get("last_name",  type = str)
+        # TODO add-4 company (may be None)
+        company = request.form.get("company", type = str) or None
         email = request.form.get("email", type = str)
 
         has_error = False # use this to control whether or not an insert occurs
+        
         # TODO add-2 first_name is required (flash proper error message)
         if not first_name:
             has_error = True
-            flash("First name is required","error")
+            flash("First name is required","danger")
         # TODO add-3 last_name is required (flash proper error message)
         if not last_name:
             has_error = True
-            flash("Last name is required","error")
+            flash("Last name is required","danger")
         # TODO add-5 email is required (flash proper error message)
         if not email:
             has_error = True
-            flash("Email is required","error")
+            flash("Email is required","danger")
         # TODO add-5a verify email is in the correct format
         if "@" not in email or "." not in email:
             has_error = True
-            flash("Email not in valid format.","error")
+            flash("Email not in valid format.","danger")
         '''
         UCID: mm2836, Date Implemented: 04/08/23
         '''
         if not has_error:
             try:
                 result = DB.insertOne("""
-                INSERT INTO IS601_MP3_Employees (first_name, last_name, company_id, email)
-                VALUES (%s, %s, %s, %s)
-                """, (first_name, last_name, company, email)
-                ) # <-- TODO add-6 add query and add arguments
+                INSERT INTO IS601_MP3_Employees
+                (first_name, last_name, company_id, email) VALUES (%s, %s, %s, %s);
+                """, first_name, last_name, company, email)
+                # <-- TODO add-6 add query and add arguments
                 if result.status:
                     flash("Created Employee Record", "success")
             except Exception as e:
@@ -134,8 +136,9 @@ def edit():
             
             # TODO edit-1 retrieve form data for first_name, last_name, company, email
             first_name = request.form.get('first_name', type = str)
-            last_name = request.form.get('last_name',type = str)
-            company = request.form.get('company',type = str)
+            last_name = request.form.get('last_name',type = str)\
+            # TODO add-4 company (may be None)
+            company = request.form.get('company',type = str) or None
             email = request.form.get('email',type = str)
             has_error = False # use this to control whether or not an insert occurs
             # TODO add-2 first_name is required (flash proper error message)
@@ -146,9 +149,6 @@ def edit():
             if not last_name:
                 flash("Last name is required","error")
                 has_error = True
-            # TODO add-4 company (may be None)
-            if not company:
-                company = None
             # TODO add-5 email is required (flash proper error message)
             if not email:
                 flash("Email is required","error")
@@ -167,7 +167,7 @@ def edit():
                     UPDATE IS601_MP3_Employees SET
                     first_name=%s,
                     last_name=%s,
-                    company=%s,
+                    company_id=%s,
                     email=%s
                     WHERE id = %s
                     """, (first_name, last_name, company, email,id))
