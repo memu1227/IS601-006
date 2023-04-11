@@ -97,30 +97,31 @@ def add():
         if not city:
             has_error = True
             flash(f"City is Required", "danger")
-        # TODO add-5 state is required (flash proper error message)
-        if not state:
-            has_error = True
-            flash(f"State is Required", "danger")
-        # TODO add-5a state should be a valid state mentioned in pycountry for the selected state
-        # hint see geography.py and pycountry documentation
-        if hasattr(pycountry.subdivisions, f'get_subdivisions("{country}")'):
-            regions = pycountry.subdivisions.get(country_code=country.strip())
-            if state not in [region.code.split('-')[1] for region in regions]:
-                has_error = True
-                flash(f"Invalid State, state not found in {country}","danger")
-        
-        '''
-        UCID: mm2836, Date Implemented: 04/08/23
-        '''
         # TODO add-6 country is required (flash proper error message)
         if not country:
             has_error = True
             flash(f"Country is required", "danger")
+        # TODO add-5 state is required (flash proper error message)
+        if not state:
+            has_error = True
+            flash(f"State is Required.", "danger")
         # TODO add-6a country should be a valid country mentioned in pycountry
-        elif country not in [c.alpha_2 for c in pycountry.countries]:
+        if country not in [c.alpha_2 for c in pycountry.countries]:
             has_error = True
             flash(f"Invalid Country", "danger")
         # hint see geography.py and pycountry documentation
+        # Check if the country has any states/regions 
+        if hasattr(pycountry.subdivisions, f'get_subdivisions("{country}")'):
+            regions = pycountry.subdivisions.get(country_code=country.strip())
+            # TODO add-5a state should be a valid state mentioned in pycountry for the selected state
+            # hint see geography.py and pycountry documentation
+            if state not in [region.code.split('-')[1] for region in regions]:
+                has_error = True
+                flash(f"Invalid State, state not found in {country}","danger")
+        '''
+        UCID: mm2836, Date Implemented: 04/08/23
+        '''
+        
         # TODO add-7 website is not required
         if not website:
             website = None
@@ -183,9 +184,13 @@ def edit():
                 has_error = True
             # TODO add-5a state should be a valid state mentioned in pycountry for the selected state
             # hint see geography.py and pycountry documentation
-            elif country and state not in [s.name for s in pycountry.subdivisions.get(country_code=country)]:
-                flash(f"Invalid state", "danger")
-                has_error = True
+            if hasattr(pycountry.subdivisions, f'get_subdivisions("{country}")'):
+                regions = pycountry.subdivisions.get(country_code=country.strip())
+                # TODO add-5a state should be a valid state mentioned in pycountry for the selected state
+                # hint see geography.py and pycountry documentation
+                if state not in [region.code.split('-')[1] for region in regions]:
+                    has_error = True
+                    flash(f"Invalid State, state not found in {country}","danger")
             '''
             UCID: mm2836, Date Implemented: 04/08/23
             '''
@@ -208,16 +213,16 @@ def edit():
                 has_error = True
             # note: call zip variable zipcode as zip is a built in function it could lead to issues
             # populate data dict with mappings
-            data = {
-                "id": id,
-                "name": name,
-                "address": address,
-                "city": city,
-                "state": state,
-                "country": country,
-                "zip": zip,
-                "website": website
-            }
+            #data = {
+            #    "id": id,
+            #    "name": name,
+            #    "address": address,
+            #    "city": city,
+            #    "state": state,
+            #    "country": country,
+            #    "zip": zip,
+            #    "website": website
+            #}
             '''
             UCID: mm2836, Date Implemented: 04/08/23
             '''
@@ -228,10 +233,15 @@ def edit():
                     # name, address, city, state, country, zip, website
                     result = DB.update("""
                     UPDATE IS601_MP3_Companies
-                    SET name = %s, address = %s, city = %s, country = %s, state = %s,
-                    zip = %s, website = %s
+                    SET name = %s,
+                        address = %s,
+                        city = %s,
+                        country = %s,
+                        state = %s,
+                        zip = %s,
+                        website = %s
                     WHERE id = %s
-                    """, data)
+                    """, name, address, city, country, state, zip, website,id)
                     if result.status:
                         print("updated record")
                         flash("Updated record", "success")
