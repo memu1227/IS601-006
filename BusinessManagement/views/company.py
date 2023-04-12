@@ -171,17 +171,18 @@ def edit():
 
             # TODO edit-2 name is required (flash proper error message)
             has_error = False # use this to control whether or not an insert occurs
+            errors = []
             if not name:
-                flash(f"Company Name is Required", "danger")
                 has_error = True
+                flash(f"Company Name is Required", "danger")
             # TODO add-3 address is required (flash proper error message)
             if not address:
-                flash(f"Address is Required", "danger")
                 has_error = True
+                flash(f"Address is Required", "danger")
             # TODO add-4 city is required (flash proper error message)
             if not city:
-                flash(f"City is Required", "danger")
                 has_error = True
+                flash(f"City is Required", "danger")
             '''
             UCID: mm2836 Date Implemented: 04/08/23
             '''
