@@ -137,7 +137,7 @@ def edit():
             # TODO edit-1 retrieve form data for first_name, last_name, company, email
             first_name = request.form.get('first_name', type = str)
             last_name = request.form.get('last_name',type = str)
-            company_id= request.form.get('company', type = str)
+            company_id= request.form.get('company',type = str)
             email = request.form.get('email',type = str)
             has_error = False # use this to control whether or not an insert occurs
             # TODO add-2 first_name is required (flash proper error message)
@@ -151,6 +151,7 @@ def edit():
             # TODO add-4 company (may be None)
             if not company_id:
                 company_id = None
+            
             # TODO add-5 email is required (flash proper error message)
             if not email:
                 flash("Email is required","error")
