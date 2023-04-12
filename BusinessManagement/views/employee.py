@@ -49,13 +49,18 @@ def search():
     UCID: mm2836, Date Implemented: 04/07/23
     '''
     # TODO search-8 append limit (default 10) or limit greater than 1 and less than or equal to 100
-    
-    if limit and int(limit) > 0 and int(limit) <= 100:
-        query += f"LIMIT{limit}"
-        args["limit"] = int(limit)
-    # TODO search-9 provide a proper error message if limit isn't a number or if it's out of bounds
-    elif limit and (int(limit) <= 0 or int(limit) > 100):
-        flash("Limit not in bounds. Please enter a limit between 1 and 100", 'warning')
+    if limit:
+        try:
+            limit_value = int(limit)
+            if limit_value <= 0 or limit_value > 100:
+                flash("Limit not in bounds. Please enter a limit between 1 and 100", 'warning')
+            else:
+                query += f" LIMIT {limit_value}"
+                args["limit"] = limit_value
+        except ValueError:
+            flash("Limit must be a number", 'warning')
+    else:
+        query += " LIMIT 10"
 
     print("query",query)
     print("args", args)
@@ -141,19 +146,20 @@ def edit():
             email = request.form.get('email',type = str)
             has_error = False # use this to control whether or not an insert occurs
             # TODO add-2 first_name is required (flash proper error message)
-            if not first_name:
+            if first_name == '' or first_name == None:
                 flash("First name is required","error")
                 has_error = True
             # TODO add-3 last_name is required (flash proper error message)
-            if not last_name:
+            if last_name == '' or last_name == None:
                 flash("Last name is required","error")
                 has_error = True
             # TODO add-4 company (may be None)
             if not company_id:
                 company_id = None
-            
+            if int(company_id) < 0:
+                has_error = True
             # TODO add-5 email is required (flash proper error message)
-            if not email:
+            if email == '' or email == None:
                 flash("Email is required","error")
                 has_error = True
             # TODO add-5a verify email is in the correct format
@@ -177,9 +183,9 @@ def edit():
         row = {}
         try:
             # TODO edit-8 fetch the updated data 
-            result = DB.selectOne("""SELECT employees.first_name, employees.last_name, employees.email, employees.company_id, 
+            result = DB.selectOne("""SELECT employees.first_name, employees.last_name, employees.email, employees.company_id,
             IF(companies.name is not null, companies.name,'N/A') AS 
-            company_name FROM IS601_MP3_Employees employees LEFT JOIN IS601_MP3_Companies companies 
+            company_name from IS601_MP3_Employees employees LEFT JOIN IS601_MP3_Companies companies
             ON employees.company_id = companies.id WHERE employees.id = %s""", id)
             if result.status:
                 row = result.row
