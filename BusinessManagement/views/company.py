@@ -97,6 +97,9 @@ def add():
         if not city:
             has_error = True
             flash(f"City is Required", "danger")
+        '''
+        UCID: mm1227 Date Implemented 04/09/23
+        '''
         # TODO add-6 country is required (flash proper error message)
         if not country:
             has_error = True
@@ -168,17 +171,21 @@ def edit():
 
             # TODO edit-2 name is required (flash proper error message)
             has_error = False # use this to control whether or not an insert occurs
+            errors = []
             if not name:
-                flash(f"Company Name is Required", "danger")
                 has_error = True
+                flash(f"Company Name is Required", "danger")
             # TODO add-3 address is required (flash proper error message)
             if not address:
-                flash(f"Address is Required", "danger")
                 has_error = True
+                flash(f"Address is Required", "danger")
             # TODO add-4 city is required (flash proper error message)
             if not city:
-                flash(f"City is Required", "danger")
                 has_error = True
+                flash(f"City is Required", "danger")
+            '''
+            UCID: mm2836 Date Implemented: 04/08/23
+            '''
             # TODO add-5 state is required (flash proper error message)
             if not state:
                 has_error = True
