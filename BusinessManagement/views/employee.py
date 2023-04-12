@@ -146,20 +146,20 @@ def edit():
             email = request.form.get('email',type = str)
             has_error = False # use this to control whether or not an insert occurs
             # TODO add-2 first_name is required (flash proper error message)
-            if not first_name:
+            if first_name == '' or first_name == None:
                 flash("First name is required","error")
                 has_error = True
             # TODO add-3 last_name is required (flash proper error message)
-            if not last_name:
+            if last_name == '' or last_name == None:
                 flash("Last name is required","error")
                 has_error = True
             # TODO add-4 company (may be None)
             if not company_id:
                 company_id = None
-            if company_id < 0:
+            if int(company_id) < 0:
                 has_error = True
             # TODO add-5 email is required (flash proper error message)
-            if not email:
+            if email == '' or email == None:
                 flash("Email is required","error")
                 has_error = True
             # TODO add-5a verify email is in the correct format
@@ -183,10 +183,10 @@ def edit():
         row = {}
         try:
             # TODO edit-8 fetch the updated data 
-            result = DB.selectOne("""SELECT employee.first_name, employee.last_name, employee.email, employee.company_id,
+            result = DB.selectOne("""SELECT employees.first_name, employees.last_name, employees.email, employees.company_id,
             IF(companies.name is not null, companies.name,'N/A') AS 
-            company_name from IS601_MP3_Employees employee LEFT JOIN IS601_MP3_Companies companies
-            ON employee.company_id = companies.id WHERE employee.id = %s""", id)
+            company_name from IS601_MP3_Employees employees LEFT JOIN IS601_MP3_Companies companies
+            ON employees.company_id = companies.id WHERE employees.id = %s""", id)
             if result.status:
                 row = result.row
         except Exception as e:
