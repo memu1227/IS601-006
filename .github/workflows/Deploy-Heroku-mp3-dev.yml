@@ -1,14 +1,12 @@
 # Your workflow name.
-name: Deploy to heroku dev.
+name: Deploy to heroku mp3-dev.
 
 # Run workflow on every push to master branch.
 
 on:
   push:
     branches:
-      - dev
-      - DeploymentSetup
-      - Flask-Sample-PyTest
+      - mp3-dev
 
 # Your workflows jobs.
 jobs:
@@ -19,7 +17,7 @@ jobs:
       SECRET_KEY: ${{secrets.SECRET_KEY}}
       PORT: 8080
       # change to the project directory you're deploying
-      WORKING_DIRECTORY: flask_sample
+      WORKING_DIRECTORY: BusinessManagement
     defaults:
       run:
           working-directory: ${{env.WORKING_DIRECTORY}}
@@ -48,7 +46,7 @@ jobs:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           
           # Name of the heroku application to which the build is to be sent.
-          heroku_app_name: ${{ secrets.HEROKU_APP_NAME_DEV }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_MP3_DEV }}
 
           # (Optional, default: "./")
           # Dockerfile directory.
