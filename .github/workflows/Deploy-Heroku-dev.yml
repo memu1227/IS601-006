@@ -7,8 +7,6 @@ on:
   push:
     branches:
       - dev
-      - DeploymentSetup
-      - Flask-Sample-PyTest
 
 # Your workflows jobs.
 jobs:
@@ -19,7 +17,7 @@ jobs:
       SECRET_KEY: ${{secrets.SECRET_KEY}}
       PORT: 8080
       # change to the project directory you're deploying
-      WORKING_DIRECTORY: flask_sample
+      WORKING_DIRECTORY: flask_sample_005
     defaults:
       run:
           working-directory: ${{env.WORKING_DIRECTORY}}
@@ -69,6 +67,5 @@ jobs:
           # For more information look at https://devcenter.heroku.com/articles/process-model
           process_type: web
           
-   
           
 ### ⬆ IMPORTANT PART ⬆ ###
