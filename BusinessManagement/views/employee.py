@@ -142,26 +142,31 @@ def edit():
             # TODO edit-1 retrieve form data for first_name, last_name, company, email
             first_name = request.form.get('first_name', type = str)
             last_name = request.form.get('last_name',type = str)
+            #print(last_name)
             company_id= request.form.get('company',type = str)
             email = request.form.get('email',type = str)
             has_error = False # use this to control whether or not an insert occurs
             # TODO add-2 first_name is required (flash proper error message)
             if first_name == '' or first_name == None:
+                has_error = True
                 flash("First name is required","error")
-                has_error = True
+                
             # TODO add-3 last_name is required (flash proper error message)
+            #print(last_name)
             if last_name == '' or last_name == None:
-                flash("Last name is required","error")
                 has_error = True
+                flash("Last name is required","error")
+
             # TODO add-4 company (may be None)
             if not company_id:
                 company_id = None
-            if int(company_id) < 0:
-                has_error = True
+            if company_id is None or ' ':
+                company_id = None
+            
             # TODO add-5 email is required (flash proper error message)
             if email == '' or email == None:
-                flash("Email is required","error")
                 has_error = True
+                flash("Email is required","error")
             # TODO add-5a verify email is in the correct format
             if "@" not in email or "." not in email:
                 flash("Email not in valid format.","error")
@@ -175,6 +180,7 @@ def edit():
                     result = DB.update("""UPDATE IS601_MP3_Employees 
                     SET first_name = %s, last_name = %s, company_id = %s, email = %s WHERE id = %s
                     """,first_name,last_name,company_id, email, id)
+                    
                     if result.status:
                         flash("Updated record", "success")
                 except Exception as e:
