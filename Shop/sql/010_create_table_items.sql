@@ -4,6 +4,8 @@ CREATE TABLE
         name varchar(30) UNIQUE,
         -- alternatively you'd have a SKU that's unique
         description text,
+        -- category 
+        category text,
         stock int DEFAULT 0,
         cost int DEFAULT 99999,
         -- my cost is int because I don't have regular currency; shop people may want to record it as pennies
