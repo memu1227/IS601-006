@@ -2,8 +2,10 @@
 {% block title %}{{type}} Item{% endblock %}
 {% block content %}
 {% from "_formhelpers.html" import render_field %}
+
 <div class="container-fluid">
     <div class="h3">{{type}} Item</div>
+    
     <form method="POST">
         {{ form.hidden_tag() }}
         {{render_field(form.name)}}
@@ -14,5 +16,6 @@
         {{render_field(form.image)}}
         {{form.submit(class="btn btn-primary")}}
     </form>
+    
 </div>
 {% endblock %}
