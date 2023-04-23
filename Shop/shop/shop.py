@@ -15,7 +15,7 @@ def item():
     if form.validate_on_submit():
         if form.id.data: # it's an update
             try:
-                result = DB.update("UPDATE IS601_S_Items set name = %s, description = %s, category = %s, stock = %s, cost = %s, image=%s WHERE id = %s",
+                result = DB.update("UPDATE IS601_S_Items set name = %s, description = %s, stock = %s, cost = %s, image=%s, category = %s WHERE id = %s",
                 form.name.data, form.description.data, form.category.data, form.stock.data, form.cost.data, form.image.data, form.id.data)
                 if result.status:
                     flash(f"Updated {form.name.data}", "success")
@@ -24,7 +24,7 @@ def item():
                 flash(f"Error updating item {form.name.data}", "danger")
         else: # it's a create
             try:
-                result = DB.update("""INSERT INTO IS601_S_Items (name, description, category, stock, cost, image) 
+                result = DB.update("""INSERT INTO IS601_S_Items (name, description, stock, cost, image, category) 
                 VALUES (%s,%s,%s,%s,%s)""",
                 form.name.data, form.description.data, form.category.data, form.stock.data, form.cost.data, form.image.data)
                 if result.status:
@@ -35,7 +35,7 @@ def item():
                 flash(f"Error creating item {form.name.data}", "danger")
     if id:
         try:
-            result = DB.selectOne("SELECT id, name, description, category, stock, cost, image FROM IS601_S_Items WHERE id = %s", id)
+            result = DB.selectOne("SELECT id, name, description, stock, cost, image, category FROM IS601_S_Items WHERE id = %s", id)
             if result.status and result.row:
                     form.process(MultiDict(result.row))
         except Exception as e:
@@ -62,7 +62,7 @@ def delete():
 def items():
     rows = []
     try:
-        result = DB.selectAll("SELECT id, name, description, category, stock, cost, image FROM IS601_S_Items LIMIT 25",)
+        result = DB.selectAll("SELECT id, name, description, stock, cost, image, category FROM IS601_S_Items LIMIT 25",)
         if result.status and result.rows:
             rows = result.rows
     except Exception as e:
@@ -75,7 +75,7 @@ def items():
 def shop_list():
     rows = []
     try:
-        result = DB.selectAll("SELECT id, name, description, category, stock, cost, image FROM IS601_S_Items WHERE stock > 0 LIMIT 25",)
+        result = DB.selectAll("SELECT id, name, description, stock, cost, image, category FROM IS601_S_Items WHERE stock > 0 LIMIT 25",)
         if result.status and result.rows:
             rows = result.rows
     except Exception as e:
