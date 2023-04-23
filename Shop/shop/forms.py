@@ -10,4 +10,5 @@ class ItemForm(FlaskForm):
     stock = IntegerField("stock", validators=[NumberRange(min=0)])
     cost = IntegerField("cost", validators=[NumberRange(min=0)])
     image = URLField("image", validators=[Optional()])
+    visibility = HiddenField("visibility", validators = [Optional()])
     submit = SubmitField("Save")
