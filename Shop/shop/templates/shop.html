@@ -26,12 +26,16 @@
             <div class="col">
                 <a href="?" class="btn btn-secondary">Reset</a>
             </div>
+            <div class = "col">
+                <!-- Added link to cart -->
+                <a href="{{ url_for('shop.cart') }}" class="btn btn-primary">View Cart</a> 
+            </div>
         </div>
     </form>
-    
     <!-- UCID: mm2836, Date: 04/23/23-->
-
+    
     <div class="row">
+        
         {% for row in rows %}
         <div class="col">
             <div class="card text-light bg-dark border" style="width: 20em">
@@ -40,7 +44,9 @@
                 </div>
                 <div class="card-body">
                     <div class="card-title">
-                        {{row["name"]}}
+                        <a href="{{url_for('shop.detailed_view', id=row['id'])}}">
+                            {{row["name"]}}
+                        </a>
                     </div>
                     <div class = "card-subtitle">
                         {{row["category"]}}
@@ -61,9 +67,16 @@
                         <input type="number" class="form-control" name="quantity" value="1" />
                         <div class="d-grid mt-1">
                             <input type="submit" value="+Add" class="btn btn-light" />
-                        </div>
+                        </div> 
                     </form>
-
+                    <!-- for edit button on card footer-->
+                    {% if current_user.is_authenticated %}
+                    {% if current_user.has_role("Admin") %}
+                    <div class="d-grid mt-1">
+                        <a href="{{url_for('shop.item', id=row['id'])}}" class="btn btn-secondary">Edit</a>
+                    </div>
+                    {% endif %}
+                    {% endif %}
                 </div>
             </div>
         </div>

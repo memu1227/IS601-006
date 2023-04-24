@@ -18,7 +18,9 @@
             {% set ns = namespace(total=0) %}
             {% for row in rows %}
             <tr>
-                <td>{{row["name"]}}</td>
+                <td>
+                    <a href="{{ url_for('shop.detailed_view', id=row['item_id']) }}">{{ row['name'] }}</a>
+                </td>
                 <td style="width:10em">
                     <form method="POST">
                         <div class="row">

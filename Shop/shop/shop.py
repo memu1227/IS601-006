@@ -43,6 +43,33 @@ def item():
             flash("Item not found", "danger")
     return render_template("item.html", form=form, type=type)
 
+@shop.route("/detailed_view", methods=["GET","POST"])
+@login_required
+def detailed_view():
+    form = ItemForm()
+    id = id = request.args.get("id", form.id.data or None)
+    if id:
+        try:
+            result = DB.selectOne("SELECT id, name, description, category, stock, cost, image FROM IS601_S_Items WHERE id = %s", id)
+            if result.status and result.row:
+                    row = result.row
+                    # pre-fill the form fields
+                    form.id.data = row["id"]
+                    form.name.data = row["name"]
+                    form.description.data = row["description"]
+                    form.category.data = row["category"]
+                    form.stock.data = row["stock"]
+                    form.cost.data = row["cost"]
+                    form.image.data = row["image"]
+        except Exception as e:
+            print("Error fetching item", e)
+            flash("Item not found", "danger")
+    return render_template("item.html", row = row, form = form)
+
+'''
+UCID: mm2836, Date Implemented: 04/24/23
+'''
+
 @shop.route("/admin/items/delete", methods=["GET"])
 @admin_permission.require(http_exception=403)
 def delete():
@@ -111,6 +138,7 @@ def shop_list():
 '''
 UCID: mm2836, Date: 04/23/23
 '''
+    
 
 @shop.route("/cart", methods=["GET","POST"])
 def cart():
