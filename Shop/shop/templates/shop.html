@@ -1,10 +1,36 @@
 {% extends "layout.html" %}
+{% from "sort_filter.html" import sort_filter %}
 {% block title %}Shop{% endblock %}
+
 
 <!-- content -->
 {% block content %}
 <div class="container-fluid">
     <div class="h4">Shop</div>
+
+    <!--filtering-->
+    <form method="GET">
+        <div class="row">
+            <div class="col">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" name="name" value="{{ request.args.get('name') or ''  }}">
+            </div>
+            <div class="col">
+                <label for="category">Category:</label>
+                <input type="text" class="form-control" name="category" value="{{ request.args.get('category') or '' }}">
+            </div>
+            {{sort_filter(cols=allowed_columns)}}
+            <div class="col">
+                <input type="submit" class="btn btn-primary" value="Filter">
+            </div>
+            <div class="col">
+                <a href="?" class="btn btn-secondary">Reset</a>
+            </div>
+        </div>
+    </form>
+    
+    <!-- UCID: mm2836, Date: 04/23/23-->
+
     <div class="row">
         {% for row in rows %}
         <div class="col">
@@ -15,6 +41,9 @@
                 <div class="card-body">
                     <div class="card-title">
                         {{row["name"]}}
+                    </div>
+                    <div class = "card-subtitle">
+                        {{row["category"]}}
                     </div>
                     {% if row["image"] %}
                     <img src="{{row['image']}}" style="aspect-ratio: 1; width:100%">
