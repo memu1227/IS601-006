@@ -64,7 +64,7 @@ def detailed_view():
         except Exception as e:
             print("Error fetching item", e)
             flash("Item not found", "danger")
-    return render_template("item.html", row = row, form = form)
+    return render_template("detailed_view.html", row = row, form = form)
 
 '''
 UCID: mm2836, Date Implemented: 04/24/23

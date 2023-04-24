@@ -16,7 +16,14 @@
         {{render_field(form.stock)}}
         {{render_field(form.cost)}}
         {{render_field(form.image)}}
-        {{form.submit(class="btn btn-primary")}}
     </form>
+    <!-- for edit button-->
+    {% if current_user.is_authenticated %}
+    {% if current_user.has_role("Admin") %}
+    <div class="d-grid mt-1">
+        <a href="{{url_for('shop.item', id=form.id.data)}}" class="btn btn-secondary">Edit</a>
+    </div>
+    {% endif %}
+    {% endif %}
 </div>
 {% endblock %}
