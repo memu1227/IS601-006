@@ -1,7 +1,6 @@
 CREATE TABLE
     IS601_Orders(
         id int auto_increment PRIMARY KEY,
-
         user_id int not null,
         total_price float not null,
         address varchar(240) default null COMMENT  'Address of residence', 
