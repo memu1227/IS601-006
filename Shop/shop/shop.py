@@ -253,6 +253,7 @@ def purchase():
                 order["total_spent"] = total
                 order["quantity"] = quantity
                 order["payment_method"] = payment_method
+                order["address"] = address
         # record order history
         if order_id > -1 and not has_error:
             # Note: Not really an insert 1, it'll copy data from Table B into Table A
