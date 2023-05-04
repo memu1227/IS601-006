@@ -1,0 +1,2 @@
+ALTER TABLE IS601_S_Orders
+MODIFY COLUMN total_price int DEFAULT 0;

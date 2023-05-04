@@ -1,34 +1,18 @@
 {% extends "layout.html" %}
-{% block title %}Order Confirmation{% endblock %}
+{% block title %}Pending Purchase{% endblock %}
 
 <!-- content -->
 {% block content %}
 <div class="container-fluid">
-    <div class="h4">Order Confirmation</div>
-    <div class="h5">Thank you for your investment.</div>
-    <table class="table text-light bg-dark">
-        <thead>
-            <th>Order ID</th>
-            <th>Total Spent</th>
-            <th>Total Items</th>
-            <th>Payment Method</th>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{order.order_id}}</td>
-                <td>{{order.total_spent}}</td>
-                <td>{{order.quantity}}</td>
-                <td>{{order.payment_method}}</td>
-                <!-- UCID: mm2836, Date Implemented: 05/03/23-->
-            </tr>
-        </tbody>
-    </table>
+    <div class="h4">Pending Purchase</div>
     <table class="table text-light bg-dark">
         <thread>
             <tr>
                 <th>Item</th>
                 <th>Quantity</th>
+                <th>Unit Cost</th>
                 <th>Subtotal</th>
+                <th>Percent Change</th>
             </tr>
         </thread>
         <tbody>
@@ -37,9 +21,19 @@
             <tr>
                 <td>{{row["name"]}}</td>
                 <td style="width:10em">
-                    {{row["quantity"]}}
+                    <form method="POST">
+                        <div class="row">
+                            <input type="hidden" name="item_id" value="{{row['item_id']}}" />
+                            <div class="col">
+                                <input type="number" class="form-control" name="quantity"
+                                    value="{{row['quantity']}}" />
+                            </div>
+                        </div>
+                    </form>
                 </td>
+                <td>{{row['item_cost']}}</td>
                 <td>{{row['subtotal']}}</td>
+                <td>{{row['percentage_change']}}</td>
                 {# https://stackoverflow.com/a/51880609 #}
                 {% set ns.total = ns.total + row['subtotal'] %}
             </tr>
