@@ -319,6 +319,39 @@ def purchase():
     # TODO add link from cart page to this route
     return render_template("order_summary.html", rows=cart, order=order)
 
+@shop.route("/detailed_order", methods=["GET","POST"])
+@login_required
+def detailed_order():
+    order = {}
+    id = id = request.args.get("id")
+    if id:
+        try:
+            result = DB.selectOne("SELECT id, address, total_price, payment_method, money_received, number_of_items FROM IS601_S_Orders WHERE id = %s", id)
+            if result.status and result.row:
+                    row = result.row
+                    order["order_id"] = row["id"]
+                    order["total_spent"] = row["money_received"]
+                    order["quantity"] = row["number_of_items"]
+                    order["payment_method"] = row["payment_method"]
+                    order["address"] = row["address"]
+        except Exception as e:
+            print("Error fetching item", e)
+            flash("Item not found", "danger")
+        # locking query to order_id and user_id so the user can see only their orders
+        total = 0
+        result2 = DB.selectAll("""
+        SELECT name, oi.cost, oi.quantity, (oi.cost*oi.quantity) as subtotal FROM IS601_S_OrderItems oi JOIN IS601_S_Items i on oi.item_id = i.id WHERE order_id = %s ANd user_id = %s
+        """, id, current_user.get_id())
+        
+        if result2.status and result2.rows:
+            rows = result2.rows
+            total = sum(int(r["subtotal"]) for r in rows)
+    return render_template("order_detailed_view.html", order = order,total = total,rows = rows)
+
+"""
+UCID: mm2836, Date Implemented: 05/04/23
+"""
+    
 
 @shop.route("/orders", methods=["GET"])
 @login_required
@@ -356,6 +389,7 @@ def order():
         print("Error getting order", e)
         flash("Error fetching order", "danger")
     return render_template("order.html", rows=rows, total=total)
+
 
 @shop.route('/shop/pending', methods=['GET'])
 @login_required
