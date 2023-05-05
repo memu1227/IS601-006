@@ -1,11 +1,41 @@
 {% extends "layout.html" %}
+{% from "sort_filter.html" import sort_filter %}
 {% block title %}Shop{% endblock %}
+
 
 <!-- content -->
 {% block content %}
 <div class="container-fluid">
     <div class="h4">Shop</div>
+
+    <!--filtering-->
+    <form method="GET">
+        <div class="row">
+            <div class="col">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" name="name" value="{{ request.args.get('name') or ''  }}">
+            </div>
+            <div class="col">
+                <label for="category">Category:</label>
+                <input type="text" class="form-control" name="category" value="{{ request.args.get('category') or '' }}">
+            </div>
+            {{sort_filter(cols=allowed_columns)}}
+            <div class="col">
+                <input type="submit" class="btn btn-primary" value="Filter">
+            </div>
+            <div class="col">
+                <a href="?" class="btn btn-secondary">Reset</a>
+            </div>
+            <div class = "col">
+                <!-- Added link to cart -->
+                <a href="{{ url_for('shop.cart') }}" class="btn btn-primary">View Cart</a> 
+            </div>
+        </div>
+    </form>
+    <!-- UCID: mm2836, Date: 04/23/23-->
+    
     <div class="row">
+        
         {% for row in rows %}
         <div class="col">
             <div class="card text-light bg-dark border" style="width: 20em">
@@ -14,7 +44,12 @@
                 </div>
                 <div class="card-body">
                     <div class="card-title">
-                        {{row["name"]}}
+                        <a href="{{url_for('shop.detailed_view', id=row['id'])}}">
+                            {{row["name"]}}
+                        </a>
+                    </div>
+                    <div class = "card-subtitle">
+                        {{row["category"]}}
                     </div>
                     {% if row["image"] %}
                     <img src="{{row['image']}}" style="aspect-ratio: 1; width:100%">
@@ -29,12 +64,19 @@
                     </div>
                     <form action="{{url_for('shop.cart')}}" method="POST">
                         <input type="hidden" name="id" value="{{row['id']}}" />
-                        <input type="number" class="form-control" name="q" value="1" />
+                        <input type="number" class="form-control" name="quantity" value="1" />
                         <div class="d-grid mt-1">
                             <input type="submit" value="+Add" class="btn btn-light" />
-                        </div>
+                        </div> 
                     </form>
-
+                    <!-- for edit button on card footer-->
+                    {% if current_user.is_authenticated %}
+                    {% if current_user.has_role("Admin") %}
+                    <div class="d-grid mt-1">
+                        <a href="{{url_for('shop.item', id=row['id'])}}" class="btn btn-secondary">Edit</a>
+                    </div>
+                    {% endif %}
+                    {% endif %}
                 </div>
             </div>
         </div>
