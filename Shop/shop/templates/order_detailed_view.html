@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% block title %}Order View{% endblock %}
+
+<!-- content -->
+{% block content %}
+<div class="container-fluid">
+    <div class="h4">Order View</div>
+    <table class="table text-light bg-dark">
+        <thead>
+            <th>Order ID</th>
+            <th>Total Spent</th>
+            <th>Total Items</th>
+            <th>Payment Method</th>
+            <th>Shipping Address</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{order.order_id}}</td>
+                <td>{{order.total_spent}}</td>
+                <td>{{order.quantity}}</td>
+                <td>{{order.payment_method}}</td>
+                <td>{{order.address}}</td>
+                <!-- UCID: mm2836, Date Implemented: 05/03/23-->
+            </tr>
+        </tbody>
+    </table>
+    <table class="table text-light bg-dark">
+        <thread>
+            <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+            </tr>
+        </thread>
+        <tbody>
+            {% set ns = namespace(total=0) %}
+            {% for row in rows %}
+            <tr>
+                <td>{{row["name"]}}</td>
+                <td style="width:10em">
+                    {{row["quantity"]}}
+                </td>
+                <td>{{row['subtotal']}}</td>
+                {# https://stackoverflow.com/a/51880609 #}
+                {% set ns.total = ns.total + row['subtotal'] %}
+            </tr>
+            {% endfor %}
+            <tr>
+                <td class="text-end" colspan="100%">
+                    Total: {{ns.total or 0}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

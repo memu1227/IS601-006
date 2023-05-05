@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% block title %}Pending Purchase{% endblock %}
+
+<!-- content -->
+{% block content %}
+<div class="container-fluid">
+    <div class="h4">Pending Purchase</div>
+    <table class="table text-light bg-dark">
+        <thread>
+            <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Unit Cost</th>
+                <th>Subtotal</th>
+                <th>Percent Change</th>
+            </tr>
+        </thread>
+        <tbody>
+            {% set ns = namespace(total=0) %}
+            {% for item in items %}
+            <tr>
+                <td>{{item['name']}}</td>
+                <td>{{item['quantity']}}</td>
+                <td>{{item['unit_cost']}}</td>
+                <td>{{item['subtotal']}}</td>
+                <td>{{item['percentage_change']}}</td>
+                {% set ns.total = ns.total + item['subtotal'] %}
+            </tr>
+            {% endfor %}
+            <tr>
+                <td class="text-end" colspan="100%">
+                    Total: {{total_price}}
+                </td>
+            </tr>
+            <tr>
+                <td class="text-end" colspan="100%">
+                    <a href="{{url_for('shop.cart')}}" class="btn btn-primary">Back to Cart</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <form method="POST" action="{{ url_for('shop.purchase') }}">
+                        <div class="form-group">
+                            <label for="first_name">First Name:</label>
+                            <input type="text" class="form-control" name="first_name" required >
+                        </div>
+                        <div class="form-group">
+                            <label for= "last_name">Last Name:</label> 
+                            <input type="text" class="form-control" name="last_name" required> 
+                        </div> 
+                        <div class="form-group">
+                            <label for="address">Address:</label>
+                            <textarea class="form-control" name="address" required></textarea> 
+                        </div> 
+                        <div class="formgroup">
+                            <label for="money_received"> Amount Paid: </label> 
+                            <input type="int" class="form-control" name="money_received" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="payment">Payment Method: </label> 
+                            <input type="text" class="form-control" name="payment_method" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary"> Checkout </button>
+                    </form> 
+                </td> 
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

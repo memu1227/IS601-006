@@ -18,9 +18,7 @@
             {% set ns = namespace(total=0) %}
             {% for row in rows %}
             <tr>
-                <td>
-                    <a href="{{ url_for('shop.detailed_view', id=row['item_id']) }}">{{ row['name'] }}</a>
-                </td>
+                <td>{{row["name"]}}</td>
                 <td style="width:10em">
                     <form method="POST">
                         <div class="row">
@@ -52,6 +50,11 @@
             <tr>
                 <td class="text-end" colspan="100%">
                     Total: {{ns.total or 0}}
+                </td>
+            </tr>
+            <tr>
+                <td class="text-end" colspan="100%">
+                    <a href="{{url_for('shop.pending')}}" class="btn btn-primary">Order</a>
                 </td>
             </tr>
         </tbody>
