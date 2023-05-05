@@ -16,8 +16,8 @@ def item():
     if form.validate_on_submit():
         if form.id.data: # it's an update
             try:
-                result = DB.update("UPDATE IS601_S_Items set name = %s, description = %s, stock = %s, cost = %s, image=%s WHERE id = %s",
-                form.name.data, form.description.data, form.stock.data, form.cost.data, form.image.data, form.id.data)
+                result = DB.update("UPDATE IS601_S_Items set name = %s, description = %s, category = %s, stock = %s, cost = %s, image=%s WHERE id = %s",
+                form.name.data, form.description.data, form.category.data, form.stock.data, form.cost.data, form.image.data, form.id.data)
                 if result.status:
                     flash(f"Updated {form.name.data}", "success")
             except Exception as e:
@@ -25,9 +25,9 @@ def item():
                 flash(f"Error updating item {form.name.data}", "danger")
         else: # it's a create
             try:
-                result = DB.update("""INSERT INTO IS601_S_Items (name, description, stock, cost, image) 
-                VALUES (%s,%s,%s,%s,%s)""",
-                form.name.data, form.description.data, form.stock.data, form.cost.data, form.image.data)
+                result = DB.update("""INSERT INTO IS601_S_Items (name, description, category, stock, cost, image) 
+                VALUES (%s,%s,%s,%s,%s,%s)""",
+                form.name.data, form.description.data, form.category.data, form.stock.data, form.cost.data, form.image.data)
                 if result.status:
                     flash(f"Created {form.name.data}", "success")
                     form = ItemForm() # clear form
@@ -36,7 +36,7 @@ def item():
                 flash(f"Error creating item {form.name.data}", "danger")
     if id:
         try:
-            result = DB.selectOne("SELECT id, name, description, stock, cost, image FROM IS601_S_Items WHERE id = %s", id)
+            result = DB.selectOne("SELECT id, name, description, category, stock, cost, image, visibility FROM IS601_S_Items WHERE id = %s", id)
             if result.status and result.row:
                     form.process(MultiDict(result.row))
         except Exception as e:
@@ -63,7 +63,7 @@ def delete():
 def items():
     rows = []
     try:
-        result = DB.selectAll("SELECT id, name, description, stock, cost, image FROM IS601_S_Items LIMIT 25",)
+        result = DB.selectAll("SELECT id, name, description, category, stock, cost, image, visibility FROM IS601_S_Items LIMIT 25",)
         if result.status and result.rows:
             rows = result.rows
     except Exception as e:
@@ -156,6 +156,7 @@ def cart():
                         })
                         if result.status:
                             flash(f"Added {quantity} of {name} to cart", "success")
+                            return redirect(url_for("shop.shop_list"))
             except Exception as e:
                 print("Error updating cart" ,e)
                 flash("Error updating cart", "danger")
@@ -228,7 +229,7 @@ def purchase():
         if not has_error:
             money_spent = int(request.form.get("money_received"))
             if total > money_spent:
-                flash("You can't afford to make this purchase", "danger")
+                flash(f"You can't afford to make a purchase of {total}. Try again.", "danger")
                 has_error = True
                 return redirect(url_for("shop.cart"))
             elif money_spent > total:
@@ -391,10 +392,9 @@ def order():
     return render_template("order.html", rows=rows, total=total)
 
 
-@shop.route('/shop/pending', methods=['GET'])
+@shop.route('/cart/pending', methods=['GET'])
 @login_required
 def pending():
-    #fetch cart
     rows = []
     try:
         result = DB.selectAll("""SELECT c.id, item_id, name, c.quantity, (c.quantity * c.cost) as subtotal 
@@ -440,6 +440,9 @@ def pending():
         total_price += row["subtotal"]
     # Render the HTML template with the items and total price
     return render_template('pending_purchase.html', items=items, total_price=total_price)
+'''
+UCID: mm2836, Date Implemented: 05/04/23
+'''
 
 
 @shop.route("/purchase_history", methods=["GET"])
