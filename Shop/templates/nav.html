@@ -32,6 +32,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{url_for('shop.orders')}}">Orders</a>
                 </li>
+                <!-- Purchase History Nav (requires admin)-->
+                {% if current_user.has_role("Admin") %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('shop.purchase_history')}}">Purchase History</a>
+                </li>
+                {% endif %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{url_for('auth.profile')}}">Profile</a>
                 </li>

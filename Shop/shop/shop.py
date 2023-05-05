@@ -339,9 +339,10 @@ def detailed_order():
             flash("Item not found", "danger")
         # locking query to order_id and user_id so the user can see only their orders
         total = 0
+        rows = []
         result2 = DB.selectAll("""
-        SELECT name, oi.cost, oi.quantity, (oi.cost*oi.quantity) as subtotal FROM IS601_S_OrderItems oi JOIN IS601_S_Items i on oi.item_id = i.id WHERE order_id = %s ANd user_id = %s
-        """, id, current_user.get_id())
+        SELECT name, oi.cost, oi.quantity, (oi.cost*oi.quantity) as subtotal FROM IS601_S_OrderItems oi JOIN IS601_S_Items i on oi.item_id = i.id WHERE order_id = %s
+        """, id)
         
         if result2.status and result2.rows:
             rows = result2.rows
@@ -351,7 +352,6 @@ def detailed_order():
 """
 UCID: mm2836, Date Implemented: 05/04/23
 """
-    
 
 @shop.route("/orders", methods=["GET"])
 @login_required
@@ -359,7 +359,7 @@ def orders():
     rows = []
     try:
         result = DB.selectAll("""
-        SELECT id, money_received, number_of_items, payment_method created FROM IS601_S_Orders WHERE user_id = %s
+        SELECT id, money_received, number_of_items, payment_method FROM IS601_S_Orders WHERE user_id = %s
         """, current_user.get_id())
         if result.status and result.rows:
             rows = result.rows
@@ -442,4 +442,21 @@ def pending():
     return render_template('pending_purchase.html', items=items, total_price=total_price)
 
 
+@shop.route("/purchase_history", methods=["GET"])
+@admin_permission.require(http_exception=403)
+def purchase_history():
+    rows = []
+    try:
+        result = DB.selectAll("""
+        SELECT u.username as "Username", o.id, o.money_received as "Total Spent", o.number_of_items as "quantity", o.payment_method as "Payment Method" FROM IS601_S_Orders o JOIN IS601_Users u on o.user_id = u.id 
+        """)
+        if result.status and result.rows:
+            rows = result.rows
+    except Exception as e:
+        print("Error getting orders", e)
+        flash("Error fetching orders", "danger")
+    return render_template("purchase_history.html",rows = rows)
 
+"""
+UCID: mm2836, Date Implemented: 05/04/23
+"""
