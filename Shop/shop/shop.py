@@ -75,14 +75,43 @@ def items():
 @login_required
 def shop_list():
     rows = []
+    name = request.args.get('name')
+    category = request.args.get('category')
+    stock = request.args.get('stock')
+    cost = request.args.get('cost')
+    column = request.args.get('column')
+    order = request.args.get('order')
+    query = "SELECT i.id, i.name, i.description, i.category, i.stock, i.cost, i.image, i.visibility FROM IS601_S_Items i WHERE i.stock > 0"
+    args = {}
+    allowed_columns = ["name","category","stock","cost"]
+    if name:
+        query += " AND i.name like %(name)s"
+        args["name"] = f"%{name}%"
+    if category:
+        query += " AND i.category like %(category)s"
+        args["category"] = category
+    if stock:
+        query += " AND i.stock = %(stock)s"
+        args["stock"] = stock
+    if cost: 
+        query += "AND i.cost = %(cost)s"
+        args["cost"] = cost
+    if column and order:
+        if column in allowed_columns and order in ["asc", "desc"]:
+            query += f" ORDER BY {column} {order} "
     try:
-        result = DB.selectAll("SELECT id, name, description, stock, cost, image FROM IS601_S_Items WHERE stock > 0 LIMIT 25",)
+        query += " LIMIT 25"
+        result = DB.selectAll(query,args)
         if result.status and result.rows:
             rows = result.rows
     except Exception as e:
         print("Error fetching items", e)
         flash("There was a problem loading items", "danger")
-    return render_template("shop.html", rows=rows)
+    allowed_columns_list = [(value, value) for value in allowed_columns]
+    return render_template("shop.html", rows=rows, allowed_columns=allowed_columns_list)
+'''
+UCID: mm2836, Date: 04/23/23
+'''
 
 @shop.route("/detailed_view", methods=["GET","POST"])
 @login_required
